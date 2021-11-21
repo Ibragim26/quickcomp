@@ -15,10 +15,11 @@ $(function () {
     ];
     const contents = [];
     $.ajax({
-        url: 'data.json',
+        url: 'http://localhost:8080/api/category/get',
         dataType: 'json',
         cache: false,
         success: (data) => {
+            console.log(1)
             data.forEach(e => contents.push(e))
             fillTable()
         }

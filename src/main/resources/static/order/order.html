@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QuickComp</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="wrapper">
+    <header>
+        <img id="imgh" src="photo-1593640495253-23196b27a87f.jpg" alt="comp" width="300">
+        <h1>QuickComp</h1>
+    </header>
+
+    <nav>
+        <a class="menu" href="index.html">Категории</a>
+        <a class="menu" href="Product.html">Продукты</a>
+        <a class="menu" href="order.html">Заказы</a>
+        <a class="menu" href="#">Доставка</a>
+        <a class="menu" href="#">О нас</a>
+    </nav>
+
+
+    <div class="main">
+        <button id="delete" type="button" class="button_menu">Удалить</button>
+        <button id="asc" type="button" class="button_menu">сортировать по возрастанию</button>
+        <button id="desc" type="button" class="button_menu">сортировать по убыванию</button>
+        <input type="text" id="filter" placeholder="Фильтр">
+        <div class="dynTa"></div>
+        <aside>
+            <form id="form">
+                <fieldset name="categoryFields">
+                    <label for="field_1">Введите вашу категорию</label>
+                    <input type="text" id="field_1" name="category">
+                    <label for="field_2">Введите ваш ценовой диапазон</label>
+                    <input type="text" id="field_2" name="price">
+                    <label for="field_3">Введите ваш рейтнг</label>
+                    <input type="text" id="field_3" name="rating">
+                    <button type="button" class="se" id="send">Отправить</button>
+                    <button type="button" class="se" id="edit">Изменить</button>
+                </fieldset>
+            </form>
+        </aside>
+
+    </div>
+
+    <div class="paging"></div>
+
+</div>
+<footer class="footer">
+    <div>
+        <p>Наши соцсети:</p>
+        <a href="vk.com"><img class="imgf" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/VK_Compact_Logo_%282021-present%29.svg/1200px-VK_Compact_Logo_%282021-present%29.svg.png" alt="vk"></a>
+        <a href="intagram.com"><img class="imgf" src="https://play-lh.googleusercontent.com/h9jWMwqb-h9hjP4THqrJ50eIwPekjv7QPmTpA85gFQ10PjV02CoGAcYLLptqd19Sa1iJ" alt="instagram"></a>
+        <div class="afooter">
+            <a href="#">О безопасности ваших персональных данных</a>|
+            <a href="#">Розничные магазины </a>|
+            <a href="#">Copyright © 2010-2021 QuickComp</a>
+        </div>
+    </div>
+</footer>
+<script src="jquery-3.6.0.min.js"></script>
+<script src="order_scr.js.js"></script>
+</body>
+</html>
