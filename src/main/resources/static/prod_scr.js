@@ -1,31 +1,31 @@
 $(function () {
     const headers = [
         {
-            name: 'Наименование',
-            field: 'category'
+            name: 'Название',
+            field: 'name'
         },
         {
-            name: 'Цены',
+            name: 'Описание',
+            field: 'description'
+        },
+        {
+            name: 'Цена',
             field: 'price'
         },
         {
-            name: 'Оценка',
-            field: 'rating'
+            name: 'Категория',
+            field: 'category'
         }
     ];
+
     const contents = [];
-    $.ajax({
-        url: 'http://localhost:8080/api/category/get',
-        dataType: 'json',
-        cache: false,
-        success: (data) => {
-            console.log(1)
-            data.forEach(e => contents.push(e))
-            fillTable()
-        }
-    });
+    $.get('http://localhost:8080/api/product/get', (data) =>{
+        data.forEach(e => contents.push(e));
+        fillTable(contents)
+    })
 
     let id = -1;
+    let idForChanges = -1;
 
     createTable()
     $('#edit').hide()
@@ -47,32 +47,53 @@ $(function () {
                 let td = $('<td></td>').appendTo(tr)
                 td.attr('name', `${head.field}`);
                 td.text(elem[head.field]);
-
             })
-
         })
     }
 
     $('#send').click(function(){
         let temp = new Object();
-        let formFields = $('form input');
+        let formFields = $('.prod_in');
         Array.from(formFields).forEach(ins =>{
             let param = `${ins.name}`
             temp[param] = ins.value;
             ins.value = '';
         })
 
-        let maxId = 0;
+        let maxId = 1;
         contents.forEach(elem => {
             if (elem.id > maxId)
                 maxId = elem.id;
         })
         temp.id = ++maxId;
-        contents.push(temp);
 
-        $('.tab').remove();
-        createTable()
-        fillTable()
+        $.ajax({
+            url: 'http://localhost:8080/api/product/post',
+            type: 'POST',
+            dataType: 'json',
+            cache: false,
+            contentType: 'application/json',
+            data: JSON.stringify(temp),
+            success: (e) => {
+                // console.log(e.category);
+                // let cat;
+                // $.get('http://localhost:8080/api/category/get', (data) =>{
+                //     data.forEach(e => {
+                //         console.log(e)
+                //         if (e.category === temp.category) {
+                //             cat = e.category;
+                //             temp.category = e.id;
+                //         }
+                //     });
+                // })
+
+                contents.push(temp);
+                $('.tab').remove();
+                createTable()
+                fillTable()
+                $('.tab').click(()=>{tableFunction(event)})
+            }
+        })
     })
 
     $('.tab').click(()=>{tableFunction(event)})
@@ -85,46 +106,61 @@ $(function () {
             return;
         }
 
-        $('label[for="field_1"]').text('Введите категорию');
-        $('label[for="field_2"]').text('Введите ваш ценовой диапозон');
-        $('label[for="field_3"]').text('Введите рейтинг');
+        $('label[for="field_1"]').text('Введите наименование');
+        $('label[for="field_2"]').text('Введите описание');
+        $('label[for="field_3"]').text('Введите цену');
 
-        let formFields = $('form input')
+        $.ajax({
+            url: `http://localhost:8080/api/product/delete/${idForChanges}`,
+            method: 'DELETE',
+            dataType: 'json',
+            success: () => {
+                let formFields = $('.prod_in')
 
-        Array.from(formFields).forEach(e => {
-            e.value = '';
+                Array.from(formFields).forEach(e => {
+                    e.value = '';
+                })
+                contents.splice(id, 1);
+                $('#edit').hide();
+                $('#send').show();
+                $('.tab').remove();
+                createTable()
+                fillTable(contents);
+                $('.tab').click(()=>{tableFunction(event)})
+                id = null;
+            }
         })
-
-        contents.splice(id, 1);
-
-        $('#edit').hide();
-        $('#send').show();
-
-        $('.tab').remove();
-        createTable();
-        fillTable(contents);
-
-
-        $('.tab').click(()=>{tableFunction(event)})
     })
 
     $('#edit').click( () => {
-        let formFields = $('form input')
+        let formFields = $('.prod_in')
+        let temp = {}
         Array.from(formFields).forEach(e => {
-            contents[id][e.name] = e.value;
+            temp[e.name] = e.value;
             e.value = ''
         })
-        $('.tab').remove();
-        createTable()
-        fillTable(contents);
+        temp.id = idForChanges;
+        $.ajax({
+            url: `http://localhost:8080/api/product/update/${idForChanges}`,
+            method: 'PUT',
+            dataType: 'json',
+            data: JSON.stringify(temp),
+            cache: false,
+            contentType: 'application/json',
+            success: () => {
+                contents[id] = temp;
+                $('.tab').remove();
+                createTable()
+                fillTable(contents);
+                $('.tab').click(()=>{tableFunction(event)})
+                $('.tab').click(()=>{tableFunction(event)})
+            }
+        })
 
-        $('label[for="field_1"]').text('Введите категорию');
-        $('label[for="field_2"]').text('Введите ваш ценовой диапозон');
-        $('label[for="field_3"]').text('Введите рейтинг');
+        $('label[for="field_1"]').text('Введите наименование');
+        $('label[for="field_2"]').text('Введите описание');
+        $('label[for="field_3"]').text('Введите цену');
 
-        $('.tab').click(()=>{tableFunction(event)})
-
-        id = null;
         $('#edit').hide();
         $('#send').show();
     })
@@ -167,19 +203,19 @@ $(function () {
 
     function tableFunction(event) {
         if (event.target.parentElement.className === 'forAnyChange') {
-            let formFields = $('form input');
-
+            let formFields = $('.prod_in');
             $('.forColor').removeClass('forColor');
-
             id = contents.findIndex(e => {
                 if (e.id == event.target.parentElement.id)
                     return e
             });
             event.target.parentElement.classList.add('forColor')
 
-            $('label[for="field_1"]').text('Поменяйте категорию');
-            $('label[for="field_2"]').text('Поменяйте ваш ценовой диапозон');
-            $('label[for="field_3"]').text('Поменяйте рейтинг');
+            idForChanges = event.target.parentElement.id
+
+            $('label[for="field_1"]').text('Поменяйте наименование');
+            $('label[for="field_2"]').text('Поменяйте описание');
+            $('label[for="field_3"]').text('Поменяйте цену');
 
             Array.from(formFields).forEach(e => {
                 e.value = $(`.forColor td[name=${e.name}]`).text()

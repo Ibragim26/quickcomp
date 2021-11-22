@@ -5,27 +5,20 @@ $(function () {
             field: 'category'
         },
         {
-            name: 'Цены',
-            field: 'price'
-        },
-        {
             name: 'Оценка',
             field: 'rating'
         }
     ];
     const contents = [];
-    $.ajax({
-        url: 'http://localhost:8080/api/category/get',
-        dataType: 'json',
-        cache: false,
-        success: (data) => {
-            console.log(1)
-            data.forEach(e => contents.push(e))
-            fillTable()
-        }
-    });
+
+    $.get('http://localhost:8080/api/category/get', (data) =>{
+        data.forEach(e => contents.push(e));
+        fillTable(contents)
+    })
 
     let id = -1;
+    let idForChanges = -1;
+
 
     createTable()
     $('#edit').hide()
@@ -47,9 +40,7 @@ $(function () {
                 let td = $('<td></td>').appendTo(tr)
                 td.attr('name', `${head.field}`);
                 td.text(elem[head.field]);
-
             })
-
         })
     }
 
@@ -67,12 +58,23 @@ $(function () {
             if (elem.id > maxId)
                 maxId = elem.id;
         })
-        temp.id = ++maxId;
-        contents.push(temp);
 
-        $('.tab').remove();
-        createTable()
-        fillTable()
+        temp.id = ++maxId;
+
+        $.ajax({
+            url: 'http://localhost:8080/api/category/post',
+            type: 'POST',
+            dataType: 'json',
+            cache: false,
+            contentType: 'application/json',
+            data: JSON.stringify(temp),
+            success: () => {
+                contents.push(temp);
+                $('.tab').remove();
+                createTable()
+                fillTable()
+            }
+        })
     })
 
     $('.tab').click(()=>{tableFunction(event)})
@@ -85,46 +87,59 @@ $(function () {
             return;
         }
 
-        $('label[for="field_1"]').text('Введите категорию');
-        $('label[for="field_2"]').text('Введите ваш ценовой диапозон');
-        $('label[for="field_3"]').text('Введите рейтинг');
+        $.ajax({
+            url: `http://localhost:8080/api/category/delete/${idForChanges}`,
+            method: 'DELETE',
+            dataType: 'json',
+            success: () => {
+                let formFields = $('form input')
 
-        let formFields = $('form input')
-
-        Array.from(formFields).forEach(e => {
-            e.value = '';
+                Array.from(formFields).forEach(e => {
+                    e.value = '';
+                })
+                contents.splice(id, 1);
+                $('#edit').hide();
+                $('#send').show();
+                $('.tab').remove();
+                createTable()
+                fillTable(contents);
+                $('.tab').click(()=>{tableFunction(event)})
+                id = null;
+            }
         })
-
-        contents.splice(id, 1);
-
-        $('#edit').hide();
-        $('#send').show();
-
-        $('.tab').remove();
-        createTable();
-        fillTable(contents);
-
-
-        $('.tab').click(()=>{tableFunction(event)})
+        $('label[for="field_1"]').text('Введите категорию');
+        $('label[for="field_2"]').text('Введите рейтинг');
     })
 
     $('#edit').click( () => {
         let formFields = $('form input')
+        let temp = {}
         Array.from(formFields).forEach(e => {
-            contents[id][e.name] = e.value;
+            temp[e.name] = e.value;
             e.value = ''
         })
-        $('.tab').remove();
-        createTable()
-        fillTable(contents);
+        temp.id = id;
+
+        $.ajax({
+            url: `http://localhost:8080/api/category/update/${idForChanges}`,
+            method: 'PUT',
+            dataType: 'json',
+            data: JSON.stringify(temp),
+            cache: false,
+            contentType: 'application/json',
+            success: () => {
+                contents[id] = temp;
+                $('.tab').remove();
+                createTable()
+                fillTable(contents);
+                $('.tab').click(()=>{tableFunction(event)})
+                id = null;
+            }
+        })
 
         $('label[for="field_1"]').text('Введите категорию');
-        $('label[for="field_2"]').text('Введите ваш ценовой диапозон');
-        $('label[for="field_3"]').text('Введите рейтинг');
+        $('label[for="field_2"]').text('Введите рейтинг');
 
-        $('.tab').click(()=>{tableFunction(event)})
-
-        id = null;
         $('#edit').hide();
         $('#send').show();
     })
@@ -168,18 +183,16 @@ $(function () {
     function tableFunction(event) {
         if (event.target.parentElement.className === 'forAnyChange') {
             let formFields = $('form input');
-
             $('.forColor').removeClass('forColor');
-
             id = contents.findIndex(e => {
                 if (e.id == event.target.parentElement.id)
                     return e
             });
             event.target.parentElement.classList.add('forColor')
+            idForChanges =  event.target.parentElement.id;
 
             $('label[for="field_1"]').text('Поменяйте категорию');
-            $('label[for="field_2"]').text('Поменяйте ваш ценовой диапозон');
-            $('label[for="field_3"]').text('Поменяйте рейтинг');
+            $('label[for="field_2"]').text('Поменяйте рейтинг');
 
             Array.from(formFields).forEach(e => {
                 e.value = $(`.forColor td[name=${e.name}]`).text()

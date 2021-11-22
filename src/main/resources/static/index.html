@@ -3,19 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>QuickComp</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
 <div class="wrapper">
     <header>
-        <img id="imgh" src="photo-1593640495253-23196b27a87f.jpg" alt="comp" width="300">
+        <img id="imgh" src="../photo-1593640495253-23196b27a87f.jpg" alt="comp" width="300">
         <h1>QuickComp</h1>
     </header>
 
     <nav>
-        <a class="menu" href="index.html">Категории</a>
-        <a class="menu" href="Product.html">Продукты</a>
-        <a class="menu" href="order.html">Заказы</a>
+<!--        <a class="menu" href="index.html">Категории</a>-->
+<!--        <a class="menu" href="../product/Product.html">Продукты</a>-->
+<!--        <a class="menu" href="../order/order.html">Заказы</a>-->
+        <a class="menu" href="#" onclick="catScr()">Категории</a>
+        <a class="menu" href="#" onclick="prodScr()">Продукты</a>
+        <a class="menu" href="#" onclick="ordScr()">Заказы</a>
         <a class="menu" href="#">Доставка</a>
         <a class="menu" href="#">О нас</a>
     </nav>
@@ -32,10 +35,8 @@
                 <fieldset name="categoryFields">
                     <label for="field_1">Введите вашу категорию</label>
                     <input type="text" id="field_1" name="category">
-                    <label for="field_2">Введите ваш ценовой диапазон</label>
-                    <input type="text" id="field_2" name="price">
-                    <label for="field_3">Введите ваш рейтнг</label>
-                    <input type="text" id="field_3" name="rating">
+                    <label for="field_2">Введите ваш рейтнг</label>
+                    <input type="text" id="field_2" name="rating">
                     <button type="button" class="se" id="send">Отправить</button>
                     <button type="button" class="se" id="edit">Изменить</button>
                 </fieldset>
@@ -59,7 +60,19 @@
         </div>
     </div>
 </footer>
-<script src="jquery-3.6.0.min.js"></script>
-<script src="scr.js"></script>
+<script src="../jquery-3.6.0.min.js"></script>
+<script src="scr.js" id="navigation">
+    function catScr(){
+        document.getElementById('navigation')
+        let a = document.createElement('script').setAttribute('id', 'navigation');
+        a.setAttribute('src', 'scr.js')
+        document.head.appendChild(a);
+    }
+
+    // <a class="menu" href="#" onclick="catScr()">Категории</a>
+    //     <a class="menu" href="#" onclick="prodScr()">Продукты</a>
+    //     <a class="menu" href="#" onclick="ordScr()">Заказы</a>
+</script>
+
 </body>
 </html>
