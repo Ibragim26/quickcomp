@@ -28,7 +28,7 @@ public class Order {
     @Temporal(TemporalType.DATE)
     private Date date = new Date();
 
-    @OneToOne( fetch = FetchType.LAZY, cascade = CascadeType.ALL )
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_status_id")
     private OrderStatus orderStatus;
 

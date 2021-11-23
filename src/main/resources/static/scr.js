@@ -16,6 +16,23 @@ $(function () {
         fillTable(contents)
     })
 
+    createForm()
+
+    function createForm() {
+        if ($('input').length != 0)
+            Array.from($('input')).forEach(e => e.remove())
+        if ($('label').length != 0)
+            Array.from($('label')).forEach(e => e.remove())
+        if ($('textarea').length != 0)
+            Array.from($('textarea')).forEach(e => e.remove())
+        if ($('select').length != 0)
+            Array.from($('select')).forEach(e => e.remove())
+        $('<label for="field_1">Введите вашу категорию</label>').appendTo('fieldset');
+        $('<input type="text" id="field_1" name="category">').appendTo('fieldset');
+        $('<label for="field_2">Введите ваш рейтнг</label>').appendTo('fieldset');
+        $('<input type="text" id="field_1" name="rating">').appendTo('fieldset');
+    }
+
     let id = -1;
     let idForChanges = -1;
 
@@ -69,10 +86,12 @@ $(function () {
             contentType: 'application/json',
             data: JSON.stringify(temp),
             success: () => {
+                console.log(temp);
                 contents.push(temp);
                 $('.tab').remove();
                 createTable()
                 fillTable()
+                $('.tab').click(()=>{tableFunction(event)})
             }
         })
     })
@@ -194,6 +213,7 @@ $(function () {
             $('label[for="field_1"]').text('Поменяйте категорию');
             $('label[for="field_2"]').text('Поменяйте рейтинг');
 
+            console.log(formFields);
             Array.from(formFields).forEach(e => {
                 e.value = $(`.forColor td[name=${e.name}]`).text()
             })

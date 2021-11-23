@@ -19,8 +19,6 @@ public class CategoryServiceImpl implements CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-
-
     @Override
     public Category getById(Long id) {
         Category category = categoryRepository.findById(id).orElse(null);
@@ -30,16 +28,6 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void save(Category category) {
         categoryRepository.save(category);
-    }
-
-    @Override
-    public void update(Long id, Category category) {
-        categoryRepository.getById(id).setCategoryName(category.getCategoryName());
-        categoryRepository.getById(id).setRating(category.getRating());
-
-        if (categoryRepository.getById(id).getProducts() != null)
-            categoryRepository.getById(id).setProducts(category.getProducts());
-
     }
 
     @Override

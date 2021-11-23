@@ -1,6 +1,7 @@
 package com.quickcomp.quickcomp.model.entity;
 
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.List;
@@ -12,20 +13,19 @@ import java.util.List;
 //@Builder
 @NoArgsConstructor
 @EqualsAndHashCode
+@AllArgsConstructor
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
+    @Column(length = 1500)
     private String description;
     private Double price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "product"
-            , cascade = CascadeType.ALL )
-    private List<Order> orders;
 }

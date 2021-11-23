@@ -10,11 +10,7 @@ public interface ProductService {
 
     void save(Product product);
 
-    void update(Long id, Product product);
-
     void delete(Long id);
-
-
 
     List<Product> getAll();
 }

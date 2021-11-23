@@ -1,15 +1,25 @@
 $(function () {
     const headers = [
         {
-            name: 'Адресс',
+            name: 'Продукт',
+            field: 'product'
+        },
+        {
+            name: 'Адрес',
             field: 'address'
         },
         {
             name: 'Дата',
             field: 'date'
+        },
+        {
+            name: 'Статус',
+            field: 'orderStatus'
         }
     ];
 
+    const stats = [];
+    const products = [];
     const contents = [];
 
     $.get('http://localhost:8080/api/order/get', (data) =>{
@@ -17,12 +27,47 @@ $(function () {
         fillTable(contents)
     })
 
+    $.get('http://localhost:8080/api/product/get', (data) =>{
+        data.forEach(e => products.push(e));
+        $.get('http://localhost:8080/api/status/get', (data) =>{
+            data.forEach(e => stats.push(e));
+            createForm()
+        })
+    })
     let id = -1;
     let idForChanges = -1;
 
-
     createTable()
     $('#edit').hide()
+
+
+    function createForm() {
+        if ($('input').length != 0)
+            Array.from($('input')).forEach(e => e.remove())
+        if ($('label').length != 0)
+            Array.from($('label')).forEach(e => e.remove())
+        if ($('textarea').length != 0)
+            Array.from($('textarea')).forEach(e => e.remove())
+        if ($('select').length != 0)
+            Array.from($('select')).forEach(e => e.remove())
+
+        $('<label for="field_1">Введите ваш адрес</label>').appendTo('fieldset');
+        $('<input type="text" id="field_1" name="address" class="prod_in">').appendTo('fieldset');
+        $('<label for="field_2">Введите предполагаемую дату доставки</label>').appendTo('fieldset');
+        $('<input type="date" id="field_2" name="date" class="prod_in">').appendTo('fieldset');
+
+        $('<select id="field_3" name="product" class="prod_in"></select>').appendTo('fieldset');
+
+        products.forEach(e => {
+            $(`<option value=${e.id}>${e.name}</option>`).appendTo('#field_3')
+        })
+
+        $('<select id="field_4" name="orderStatus" class="prod_in"></select>').appendTo('fieldset');
+
+        stats.forEach(e => {
+            $(`<option value=${e.id}>${e.status}</option>`).appendTo('#field_4')
+        })
+    }
 
     function createTable(header = headers) {
         $('<table class="tab" border="2"></table>').appendTo('.dynTa');
@@ -34,20 +79,40 @@ $(function () {
     }
 
     function fillTable(content = contents, header = headers) {
-        content.forEach((elem) => {
+            content.forEach((elem) => {
             let tr = $('<tr class="forAnyChange"></tr>').appendTo('.tab');
             tr.attr('id', `${elem.id}`)
             header.forEach(head => {
-                let td = $('<td></td>').appendTo(tr)
-                td.attr('name', `${head.field}`);
-                td.text(elem[head.field]);
+                if (head.field == 'orderStatus'){
+                    let td = $('<td></td>').appendTo(tr)
+                    td.attr('name', `${head.field}`);
+                    let a = null;
+                    for (let key in elem.orderStatus){
+                        if (key == 'status')
+                            a = elem.orderStatus[key]
+                    }
+                    td.text(a);
+                }else if (head.field == 'product'){
+                    let td = $('<td></td>').appendTo(tr)
+                    td.attr('name', `${head.field}`);
+                    let a = null;
+                    for (let key in elem.product){
+                        if (key == 'name')
+                            a = elem.product[key]
+                    }
+                    td.text(a);
+                }else {
+                    let td = $('<td></td>').appendTo(tr)
+                    td.attr('name', `${head.field}`);
+                    td.text(elem[head.field]);
+                }
             })
         })
     }
 
     $('#send').click(function(){
         let temp = new Object();
-        let formFields = $('form input');
+        let formFields = $('.prod_in');
         Array.from(formFields).forEach(ins =>{
             let param = `${ins.name}`
             temp[param] = ins.value;
@@ -60,6 +125,22 @@ $(function () {
                 maxId = elem.id;
         })
         temp.id = ++maxId;
+
+        let stat = null;
+        stats.forEach(e => {
+            if (e.id == temp.orderStatus){
+                stat = e;
+            }
+        })
+        temp.orderStatus = stat;
+
+        let product = null;
+        products.forEach(e => {
+            if (e.id == temp.product){
+                product = e;
+            }
+        })
+        temp.product = product;
 
         $.ajax({
             url: 'http://localhost:8080/api/order/post',
@@ -118,6 +199,23 @@ $(function () {
             e.value = ''
         })
         temp.id = id;
+
+        let stat = null;
+        stats.forEach(e => {
+            if (e.id == temp.orderStatus){
+                stat = e;
+            }
+        })
+        temp.orderStatus = stat;
+
+        let product = null;
+        products.forEach(e => {
+            if (e.id == temp.product){
+                product = e;
+            }
+        })
+        temp.product = product;
+
         $.ajax({
             url: `http://localhost:8080/api/order/update/${idForChanges}`,
             method: 'PUT',
@@ -155,8 +253,8 @@ $(function () {
 
         $('#asc').click(()=>{
             contents.sort( (a, b)=> {
-                if (a.category.charAt(0) === b.category.charAt(0)) return 0
-                else if (a.category.charAt(0) > b.category.charAt(0)) return 1
+                if (a.address.charAt(0) === b.address.charAt(0)) return 0
+                else if (a.address.charAt(0) > b.address.charAt(0)) return 1
                 else return -1
             })
             $('.tab').remove();
@@ -167,8 +265,8 @@ $(function () {
 
         $('#desc').click(()=>{
             contents.sort( (a, b)=> {
-                if (a.category.charAt(0) === b.category.charAt(0)) return 0
-                else if (a.category.charAt(0) < b.category.charAt(0)) return 1
+                if (a.address.charAt(0) === b.address.charAt(0)) return 0
+                else if (a.address.charAt(0) < b.address.charAt(0)) return 1
                 else return -1
             })
             $('.tab').remove();

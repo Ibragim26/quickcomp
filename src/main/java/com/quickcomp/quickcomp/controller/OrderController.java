@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/order")
+@CrossOrigin
 public class OrderController {
 
     private OrderServiceImpl orderService;
@@ -21,7 +22,7 @@ public class OrderController {
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<Order> getCategoryById(@PathVariable Long id){
+    public ResponseEntity<Order> getOrderById(@PathVariable Long id){
         if (id == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -39,7 +40,7 @@ public class OrderController {
     }
 
     @PostMapping("/post")
-    public ResponseEntity<Order> saveCategory(@RequestBody Order order){
+    public ResponseEntity<Order> saveOrder(@RequestBody Order order){
         HttpHeaders headers = new HttpHeaders();
 
         if (order == null) {
@@ -49,19 +50,19 @@ public class OrderController {
         return new ResponseEntity<>(order, headers, HttpStatus.CREATED);
     }
     @PutMapping("/update/{id}")
-    public ResponseEntity<Order> updateCategory(@PathVariable Long id, @RequestBody Order order){
+    public ResponseEntity<Order> updateOrder(@PathVariable Long id, @RequestBody Order order){
         HttpHeaders headers = new HttpHeaders();
         if ((order) == null || (id == null)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        orderService.update(id, order);
+        orderService.save(order);
         return new ResponseEntity<>(order, headers, HttpStatus.CREATED);
     }
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Order> deleteCategory(@PathVariable Long id){
+    public ResponseEntity<Order> deleteOrder(@PathVariable Long id){
         Order order = orderService.getById(id);
         if (order == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         orderService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

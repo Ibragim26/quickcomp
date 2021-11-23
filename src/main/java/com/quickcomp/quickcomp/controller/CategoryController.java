@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/category")
+@CrossOrigin
 public class CategoryController {
 
     private CategoryServiceImpl categoryService;
@@ -54,14 +55,14 @@ public class CategoryController {
         if ((category) == null || (id == null)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        categoryService.update(id, category);
+        categoryService.save(category);
         return new ResponseEntity<>(category, headers, HttpStatus.CREATED);
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Category> deleteCategory(@PathVariable Long id){
         Category category = categoryService.getById(id);
         if (category == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         categoryService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

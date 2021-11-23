@@ -18,6 +18,12 @@ $(function () {
         }
     ];
 
+    const caterories = [];
+    $.get('http://localhost:8080/api/category/get', (data) =>{
+        data.forEach(e => caterories.push(e));
+        createForm()
+    })
+
     const contents = [];
     $.get('http://localhost:8080/api/product/get', (data) =>{
         data.forEach(e => contents.push(e));
@@ -29,6 +35,34 @@ $(function () {
 
     createTable()
     $('#edit').hide()
+
+    createForm()
+
+    function createForm() {
+        if ($('input').length != 0)
+            Array.from($('input')).forEach(e => e.remove())
+        if ($('label').length != 0)
+            Array.from($('label')).forEach(e => e.remove())
+        if ($('textarea').length != 0)
+            Array.from($('textarea')).forEach(e => e.remove())
+        if ($('select').length != 0)
+            Array.from($('select')).forEach(e => e.remove())
+
+        $('<label for="field_1">Введите имя продукта</label>').appendTo('fieldset');
+        $('<input type="text" id="field_1" name="name" class="prod_in">').appendTo('fieldset');
+
+        $('<label for="field_2">Введите описание продукта</label>').appendTo('fieldset');
+        $('<textarea id="field_2"name="description" cols="30" rows="10" class="prod_in"></textarea>').appendTo('fieldset');
+
+        $('<label for="field_3">Введите цену продукта</label>').appendTo('fieldset');
+        $('<input type="number" id="field_3" name="price" class="prod_in">').appendTo('fieldset');
+
+        $('<select id="field_4" name="category" class="prod_in"></select>').appendTo('fieldset');
+
+        caterories.forEach(e => {
+            $(`<option value=${e.id}>${e.category}</option>`).appendTo('#field_4')//('<option value="${e.id}">"${e.name}"</option>');
+        })
+    }
 
     function createTable(header = headers) {
         $('<table class="tab" border="2"></table>').appendTo('.dynTa');
@@ -44,9 +78,15 @@ $(function () {
             let tr = $('<tr class="forAnyChange"></tr>').appendTo('.tab');
             tr.attr('id', `${elem.id}`)
             header.forEach(head => {
-                let td = $('<td></td>').appendTo(tr)
-                td.attr('name', `${head.field}`);
-                td.text(elem[head.field]);
+                if (head.field == "category"){
+                    let td = $('<td></td>').appendTo(tr)
+                    td.attr('name', `${head.field}`);
+                    td.text(elem[head.field].category);
+                }else {
+                    let td = $('<td></td>').appendTo(tr)
+                    td.attr('name', `${head.field}`);
+                    td.text(elem[head.field]);
+                }
             })
         })
     }
@@ -67,6 +107,14 @@ $(function () {
         })
         temp.id = ++maxId;
 
+        let cat = null;
+        caterories.forEach(e => {
+            if (e.id == temp.category){
+                cat = e;
+            }
+        })
+        temp.category = cat;
+
         $.ajax({
             url: 'http://localhost:8080/api/product/post',
             type: 'POST',
@@ -74,28 +122,14 @@ $(function () {
             cache: false,
             contentType: 'application/json',
             data: JSON.stringify(temp),
-            success: (e) => {
-                // console.log(e.category);
-                // let cat;
-                // $.get('http://localhost:8080/api/category/get', (data) =>{
-                //     data.forEach(e => {
-                //         console.log(e)
-                //         if (e.category === temp.category) {
-                //             cat = e.category;
-                //             temp.category = e.id;
-                //         }
-                //     });
-                // })
-
+            success: () => {
                 contents.push(temp);
                 $('.tab').remove();
                 createTable()
                 fillTable()
-                $('.tab').click(()=>{tableFunction(event)})
             }
         })
     })
-
     $('.tab').click(()=>{tableFunction(event)})
 
     $('#delete').click(function () {
@@ -116,18 +150,16 @@ $(function () {
             dataType: 'json',
             success: () => {
                 let formFields = $('.prod_in')
-
                 Array.from(formFields).forEach(e => {
                     e.value = '';
                 })
                 contents.splice(id, 1);
-                $('#edit').hide();
-                $('#send').show();
                 $('.tab').remove();
                 createTable()
                 fillTable(contents);
                 $('.tab').click(()=>{tableFunction(event)})
-                id = null;
+                $('#edit').hide();
+                $('#send').show();
             }
         })
     })
@@ -140,6 +172,15 @@ $(function () {
             e.value = ''
         })
         temp.id = idForChanges;
+
+        let cat = null;
+        caterories.forEach(e => {
+            if (e.id == temp.category){
+                cat = e;
+            }
+        })
+        temp.category = cat;
+
         $.ajax({
             url: `http://localhost:8080/api/product/update/${idForChanges}`,
             method: 'PUT',
@@ -152,7 +193,6 @@ $(function () {
                 $('.tab').remove();
                 createTable()
                 fillTable(contents);
-                $('.tab').click(()=>{tableFunction(event)})
                 $('.tab').click(()=>{tableFunction(event)})
             }
         })
@@ -179,8 +219,8 @@ $(function () {
 
     $('#asc').click(()=>{
         contents.sort( (a, b)=> {
-            if (a.category.charAt(0) === b.category.charAt(0)) return 0
-            else if (a.category.charAt(0) > b.category.charAt(0)) return 1
+            if (a.name.charAt(0) === b.name.charAt(0)) return 0
+            else if (a.name.charAt(0) > b.name.charAt(0)) return 1
             else return -1
         })
         $('.tab').remove();
@@ -191,8 +231,8 @@ $(function () {
 
     $('#desc').click(()=>{
         contents.sort( (a, b)=> {
-            if (a.category.charAt(0) === b.category.charAt(0)) return 0
-            else if (a.category.charAt(0) < b.category.charAt(0)) return 1
+            if (a.name.charAt(0) === b.name.charAt(0)) return 0
+            else if (a.name.charAt(0) < b.name.charAt(0)) return 1
             else return -1
         })
         $('.tab').remove();

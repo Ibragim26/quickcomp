@@ -1,8 +1,6 @@
 package com.quickcomp.quickcomp.controller;
 
-import com.quickcomp.quickcomp.model.entity.Order;
 import com.quickcomp.quickcomp.model.entity.Product;
-import com.quickcomp.quickcomp.service.impl.OrderServiceImpl;
 import com.quickcomp.quickcomp.service.impl.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -14,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/product")
+@CrossOrigin
 public class ProductController
 {
     private ProductServiceImpl productService;
@@ -23,7 +22,7 @@ public class ProductController
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<Product> getCategoryById(@PathVariable Long id){
+    public ResponseEntity<Product> getProductById(@PathVariable Long id){
         if (id == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -41,7 +40,7 @@ public class ProductController
     }
 
     @PostMapping("/post")
-    public ResponseEntity<Product> saveCategory(@RequestBody Product product){
+    public ResponseEntity<Product> saveProduct(@RequestBody Product product){
         HttpHeaders headers = new HttpHeaders();
         if (product == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -51,19 +50,19 @@ public class ProductController
 
     }
     @PutMapping("/update/{id}")
-    public ResponseEntity<Product> updateCategory(@PathVariable Long id, @RequestBody Product product){
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product){
         HttpHeaders headers = new HttpHeaders();
         if ((product) == null || (id == null)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        productService.update(id, product);
+        productService.save(product);
         return new ResponseEntity<>(product, headers, HttpStatus.CREATED);
     }
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Product> deleteCategory(@PathVariable Long id){
+    public ResponseEntity<Product> deleteProduct(@PathVariable Long id){
         Product product = productService.getById(id);
         if (product == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         productService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
