@@ -22,14 +22,14 @@ $(function () {
     const products = [];
     const contents = [];
 
-    $.get(`${urlPrefix}/api/order/get`, (data) =>{
+    $.get('api/order/get', (data) =>{
         data.forEach(e => contents.push(e));
         fillTable(contents)
     })
 
-    $.get(`${urlPrefix}/api/product/get`, (data) =>{
+    $.get('api/product/get', (data) =>{
         data.forEach(e => products.push(e));
-        $.get(`${urlPrefix}/api/status/get`, (data) =>{
+        $.get('api/status/get', (data) =>{
             data.forEach(e => stats.push(e));
             createForm()
         })
@@ -143,7 +143,7 @@ $(function () {
         temp.product = product;
 
         $.ajax({
-            url: `${urlPrefix}/api/order/post`,
+            url: '/api/order/post',
             type: 'POST',
             dataType: 'json',
             cache: false,
@@ -169,7 +169,7 @@ $(function () {
         }
 
         $.ajax({
-            url: `${urlPrefix}/api/order/delete/${idForChanges}`,
+            url: `api/order/delete/${idForChanges}`,
             method: 'DELETE',
             dataType: 'json',
             success: () => {
@@ -217,7 +217,7 @@ $(function () {
         temp.product = product;
 
         $.ajax({
-            url: `${urlPrefix}/api/order/update/${idForChanges}`,
+            url: `api/order/update/${idForChanges}`,
             method: 'PUT',
             dataType: 'json',
             data: JSON.stringify(temp),

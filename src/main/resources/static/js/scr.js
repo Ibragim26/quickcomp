@@ -79,7 +79,7 @@ $(function () {
         temp.id = ++maxId;
 
         $.ajax({
-            url: `${urlPrefix}/api/category/post`,
+            url: 'api/category/post',
             type: 'POST',
             dataType: 'json',
             cache: false,
@@ -107,7 +107,7 @@ $(function () {
         }
 
         $.ajax({
-            url: `${urlPrefix}/api/category/delete/${idForChanges}`,
+            url: `api/category/delete/${idForChanges}`,
             method: 'DELETE',
             dataType: 'json',
             success: () => {
@@ -140,7 +140,7 @@ $(function () {
         temp.id = id;
 
         $.ajax({
-            url: `${urlPrefix}/api/category/update/${idForChanges}`,
+            url: `api/category/update/${idForChanges}`,
             method: 'PUT',
             dataType: 'json',
             data: JSON.stringify(temp),

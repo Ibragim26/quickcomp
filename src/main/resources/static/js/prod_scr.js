@@ -19,13 +19,13 @@ $(function () {
     ];
 
     const caterories = [];
-    $.get(`${urlPrefix}/api/category/get`, (data) =>{
+    $.get('api/category/get', (data) =>{
         data.forEach(e => caterories.push(e));
         createForm()
     })
 
     const contents = [];
-    $.get(`${urlPrefix}/api/product/get`, (data) =>{
+    $.get('api/product/get', (data) =>{
         data.forEach(e => contents.push(e));
         fillTable(contents)
     })
@@ -116,7 +116,7 @@ $(function () {
         temp.category = cat;
 
         $.ajax({
-            url: `${urlPrefix}/api/product/post`,
+            url: 'api/product/post',
             type: 'POST',
             dataType: 'json',
             cache: false,
@@ -146,7 +146,7 @@ $(function () {
         $('label[for="field_3"]').text('Введите цену');
 
         $.ajax({
-            url: `${urlPrefix}/api/product/delete/${idForChanges}`,
+            url: `/api/product/delete/${idForChanges}`,
             method: 'DELETE',
             dataType: 'json',
             success: () => {
@@ -183,7 +183,7 @@ $(function () {
         temp.category = cat;
 
         $.ajax({
-            url: `${urlPrefix}/api/product/update/${idForChanges}`,
+            url: `/api/product/update/${idForChanges}`,
             method: 'PUT',
             dataType: 'json',
             data: JSON.stringify(temp),
