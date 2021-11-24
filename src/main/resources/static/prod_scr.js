@@ -18,8 +18,6 @@ $(function () {
         }
     ];
 
-    const urlPrefix = 'http://localhost:8080'
-
     const caterories = [];
     $.get(`${urlPrefix}/api/category/get`, (data) =>{
         data.forEach(e => caterories.push(e));

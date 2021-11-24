@@ -22,8 +22,6 @@ $(function () {
     const products = [];
     const contents = [];
 
-    const urlPrefix = 'http://localhost:8080'
-
     $.get(`${urlPrefix}/api/order/get`, (data) =>{
         data.forEach(e => contents.push(e));
         fillTable(contents)
