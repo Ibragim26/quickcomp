@@ -11,7 +11,7 @@ $(function () {
     ];
     const contents = [];
 
-    $.get(`${urlPrefix}/api/category/get`, (data) =>{
+    $.get('api/category/get', (data) =>{
         data.forEach(e => contents.push(e));
         fillTable(contents)
     })

@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/status")
-@CrossOrigin
+//@CrossOrigin
 public class OrderStatusController {
 
     private OrderStatusServiceImpl orderStatusService;

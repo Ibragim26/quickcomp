@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>QuickComp</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../static/css/styles.css">
 </head>
 <body>
 <div class="wrapper">
     <header>
-        <img id="imgh" src="photo-1593640495253-23196b27a87f.jpg" alt="comp" width="300">
+
+        <img id="imgh" src="../static/photo-1593640495253-23196b27a87f.jpg" alt="comp" width="300">
         <h1>QuickComp</h1>
     </header>
 
@@ -19,7 +20,6 @@
         <a class="menu" href="#">Доставка</a>
         <a class="menu" href="#">О нас</a>
     </nav>
-
 
     <div class="main">
         <button id="delete" type="button" class="button_menu">Удалить</button>
@@ -53,10 +53,8 @@
         </div>
     </div>
 </footer>
-<script src="jquery-3.6.0.min.js"></script>
+<script src="../static/js/jquery-3.6.0.min.js"></script>
 <script>
-
-    const urlPrefix = 'http://localhost:8080'
 
     function catScr(){
         if( $('.tab').length != 0)
@@ -65,7 +63,7 @@
             $('#navigation').remove()
         let a = document.createElement('script')
         a.setAttribute('id', 'navigation');
-        a.setAttribute('src', 'scr.js')
+        a.setAttribute('src', '../static/js/scr.js')
         document.getElementsByTagName('head')[0].appendChild(a);
     }
     function prodScr(){
@@ -75,7 +73,7 @@
             $('#navigation').remove()
         let a = document.createElement('script')
         a.setAttribute('id', 'navigation');
-        a.setAttribute('src', 'prod_scr.js')
+        a.setAttribute('src', './static/js/prod_scr.js')
         document.getElementsByTagName('head')[0].appendChild(a);
     }
     function ordScr(){
@@ -85,7 +83,7 @@
             $('#navigation').remove()
         let a = document.createElement('script')
         a.setAttribute('id', 'navigation');
-        a.setAttribute('src', 'order_scr.js')
+        a.setAttribute('src', '.../static/js/order_scr.js')
         document.getElementsByTagName('head')[0].appendChild(a);
     }
 </script>
