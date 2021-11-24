@@ -57,9 +57,9 @@
 <script>
 
     function catScr(){
-        if( $('.tab').length != 0)
+        if( $('.tab').length)
             $('.tab').remove();
-        if ($('#navigation') !== null)
+        if ($('#navigation'))
             $('#navigation').remove()
         let a = document.createElement('script')
         a.setAttribute('id', 'navigation');
@@ -67,9 +67,9 @@
         document.getElementsByTagName('head')[0].appendChild(a);
     }
     function prodScr(){
-        if( $('.tab').length != 0)
+        if( $('.tab').length)
             $('.tab').remove();
-        if ($('#navigation') !== null)
+        if ($('#navigation'))
             $('#navigation').remove()
         let a = document.createElement('script')
         a.setAttribute('id', 'navigation');
@@ -77,9 +77,9 @@
         document.getElementsByTagName('head')[0].appendChild(a);
     }
     function ordScr(){
-        if( $('.tab').length != 0)
+        if( $('.tab').length)
             $('.tab').remove();
-        if ($('#navigation') !== null)
+        if ($('#navigation'))
             $('#navigation').remove()
         let a = document.createElement('script')
         a.setAttribute('id', 'navigation');

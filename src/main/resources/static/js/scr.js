@@ -27,9 +27,9 @@ $(function () {
             Array.from($('textarea')).forEach(e => e.remove())
         if ($('select').length != 0)
             Array.from($('select')).forEach(e => e.remove())
-        $('<label for="field_1">Введите вашу категорию</label>').appendTo('fieldset');
+        $('<label for="field_1">Категория</label>').appendTo('fieldset');
         $('<input type="text" id="field_1" name="category">').appendTo('fieldset');
-        $('<label for="field_2">Введите ваш рейтнг</label>').appendTo('fieldset');
+        $('<label for="field_2">Рейтнг</label>').appendTo('fieldset');
         $('<input type="text" id="field_1" name="rating">').appendTo('fieldset');
     }
 
@@ -126,8 +126,6 @@ $(function () {
                 id = null;
             }
         })
-        $('label[for="field_1"]').text('Введите категорию');
-        $('label[for="field_2"]').text('Введите рейтинг');
     })
 
     $('#edit').click( () => {
@@ -155,9 +153,6 @@ $(function () {
                 id = null;
             }
         })
-
-        $('label[for="field_1"]').text('Введите категорию');
-        $('label[for="field_2"]').text('Введите рейтинг');
 
         $('#edit').hide();
         $('#send').show();
@@ -209,9 +204,6 @@ $(function () {
             });
             event.target.parentElement.classList.add('forColor')
             idForChanges =  event.target.parentElement.id;
-
-            $('label[for="field_1"]').text('Поменяйте категорию');
-            $('label[for="field_2"]').text('Поменяйте рейтинг');
 
             console.log(formFields);
             Array.from(formFields).forEach(e => {

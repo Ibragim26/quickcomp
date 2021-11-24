@@ -48,13 +48,13 @@ $(function () {
         if ($('select').length != 0)
             Array.from($('select')).forEach(e => e.remove())
 
-        $('<label for="field_1">Введите имя продукта</label>').appendTo('fieldset');
+        $('<label for="field_1">Имя продукта</label>').appendTo('fieldset');
         $('<input type="text" id="field_1" name="name" class="prod_in">').appendTo('fieldset');
 
-        $('<label for="field_2">Введите описание продукта</label>').appendTo('fieldset');
+        $('<label for="field_2">Описание продукта</label>').appendTo('fieldset');
         $('<textarea id="field_2"name="description" cols="30" rows="10" class="prod_in"></textarea>').appendTo('fieldset');
 
-        $('<label for="field_3">Введите цену продукта</label>').appendTo('fieldset');
+        $('<label for="field_3">Цена продукта</label>').appendTo('fieldset');
         $('<input type="number" id="field_3" name="price" class="prod_in">').appendTo('fieldset');
 
         $('<select id="field_4" name="category" class="prod_in"></select>').appendTo('fieldset');
@@ -141,10 +141,6 @@ $(function () {
             return;
         }
 
-        $('label[for="field_1"]').text('Введите наименование');
-        $('label[for="field_2"]').text('Введите описание');
-        $('label[for="field_3"]').text('Введите цену');
-
         $.ajax({
             url: `/api/product/delete/${idForChanges}`,
             method: 'DELETE',
@@ -198,10 +194,6 @@ $(function () {
             }
         })
 
-        $('label[for="field_1"]').text('Введите наименование');
-        $('label[for="field_2"]').text('Введите описание');
-        $('label[for="field_3"]').text('Введите цену');
-
         $('#edit').hide();
         $('#send').show();
     })
@@ -253,10 +245,6 @@ $(function () {
             event.target.parentElement.classList.add('forColor')
 
             idForChanges = event.target.parentElement.id
-
-            $('label[for="field_1"]').text('Поменяйте наименование');
-            $('label[for="field_2"]').text('Поменяйте описание');
-            $('label[for="field_3"]').text('Поменяйте цену');
 
             Array.from(formFields).forEach(e => {
                 e.value = $(`.forColor td[name=${e.name}]`).text()

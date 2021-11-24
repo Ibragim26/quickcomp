@@ -51,9 +51,9 @@ $(function () {
         if ($('select').length != 0)
             Array.from($('select')).forEach(e => e.remove())
 
-        $('<label for="field_1">Введите ваш адрес</label>').appendTo('fieldset');
+        $('<label for="field_1">Адрес</label>').appendTo('fieldset');
         $('<input type="text" id="field_1" name="address" class="prod_in">').appendTo('fieldset');
-        $('<label for="field_2">Введите предполагаемую дату доставки</label>').appendTo('fieldset');
+        $('<label for="field_2">Дата доставки</label>').appendTo('fieldset');
         $('<input type="date" id="field_2" name="date" class="prod_in">').appendTo('fieldset');
 
         $('<select id="field_3" name="product" class="prod_in"></select>').appendTo('fieldset');
@@ -187,8 +187,6 @@ $(function () {
                 id = null;
             }
         })
-        $('label[for="field_1"]').text('Введите адрес');
-        $('label[for="field_2"]').text('Введите предполагаемую дату доставки');
     })
 
     $('#edit').click( () => {
@@ -233,8 +231,6 @@ $(function () {
             }
         })
 
-        $('label[for="field_1"]').text('Введите адрес');
-        $('label[for="field_2"]').text('Введите предполагаемую дату доставки');
             $('#edit').hide();
             $('#send').show();
         })
@@ -285,9 +281,6 @@ $(function () {
                 });
                 event.target.parentElement.classList.add('forColor')
                 idForChanges =  event.target.parentElement.id;
-
-                $('label[for="field_1"]').text('Поменяйте адрес');
-                $('label[for="field_2"]').text('Поменяйте предполагаемую дату доставки');
 
                 Array.from(formFields).forEach(e => {
                     e.value = $(`.forColor td[name=${e.name}]`).text()
