@@ -78,6 +78,10 @@ $(function () {
 
         temp.id = ++maxId;
 
+        if (temp.category === '') return
+        if (temp.category == '') return
+
+
         $.ajax({
             url: 'api/category/post',
             type: 'POST',

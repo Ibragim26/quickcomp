@@ -52,7 +52,7 @@ $(function () {
         $('<input type="text" id="field_1" name="name" class="prod_in">').appendTo('fieldset');
 
         $('<label for="field_2">Описание продукта</label>').appendTo('fieldset');
-        $('<textarea id="field_2"name="description" cols="30" rows="10" class="prod_in"></textarea>').appendTo('fieldset');
+        $('<textarea id="field_2" name="description" cols="30" rows="10" class="prod_in"></textarea>').appendTo('fieldset');
 
         $('<label for="field_3">Цена продукта</label>').appendTo('fieldset');
         $('<input type="number" id="field_3" name="price" class="prod_in">').appendTo('fieldset');
@@ -60,7 +60,7 @@ $(function () {
         $('<select id="field_4" name="category" class="prod_in"></select>').appendTo('fieldset');
 
         caterories.forEach(e => {
-            $(`<option value=${e.id}>${e.category}</option>`).appendTo('#field_4')//('<option value="${e.id}">"${e.name}"</option>');
+            $(`<option value=${e.id}>${e.category}</option>`).appendTo('#field_4')
         })
     }
 
@@ -81,7 +81,12 @@ $(function () {
                 if (head.field == "category"){
                     let td = $('<td></td>').appendTo(tr)
                     td.attr('name', `${head.field}`);
-                    td.text(elem[head.field].category);
+                    let a = null;
+                    for (let key in elem.category){
+                        if (key == 'category')
+                            a = elem.category[key]
+                    }
+                    td.text(a);
                 }else {
                     let td = $('<td></td>').appendTo(tr)
                     td.attr('name', `${head.field}`);
@@ -114,6 +119,9 @@ $(function () {
             }
         })
         temp.category = cat;
+
+        if (temp.name === '') return
+        if (temp.name == '') return
 
         $.ajax({
             url: 'api/product/post',
