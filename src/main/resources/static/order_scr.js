@@ -22,14 +22,16 @@ $(function () {
     const products = [];
     const contents = [];
 
-    $.get('http://localhost:8080/api/order/get', (data) =>{
+    const urlPrefix = 'http://localhost:8080'
+
+    $.get(`${urlPrefix}/api/order/get`, (data) =>{
         data.forEach(e => contents.push(e));
         fillTable(contents)
     })
 
-    $.get('http://localhost:8080/api/product/get', (data) =>{
+    $.get(`${urlPrefix}/api/product/get`, (data) =>{
         data.forEach(e => products.push(e));
-        $.get('http://localhost:8080/api/status/get', (data) =>{
+        $.get(`${urlPrefix}/api/status/get`, (data) =>{
             data.forEach(e => stats.push(e));
             createForm()
         })
@@ -42,7 +44,7 @@ $(function () {
 
 
     function createForm() {
-        if ($('input').length != 0)
+        if ($('form input').length != 0)
             Array.from($('input')).forEach(e => e.remove())
         if ($('label').length != 0)
             Array.from($('label')).forEach(e => e.remove())
@@ -143,7 +145,7 @@ $(function () {
         temp.product = product;
 
         $.ajax({
-            url: 'http://localhost:8080/api/order/post',
+            url: `${urlPrefix}/api/order/post`,
             type: 'POST',
             dataType: 'json',
             cache: false,
@@ -169,7 +171,7 @@ $(function () {
         }
 
         $.ajax({
-            url: `http://localhost:8080/api/order/delete/${idForChanges}`,
+            url: `${urlPrefix}/api/order/delete/${idForChanges}`,
             method: 'DELETE',
             dataType: 'json',
             success: () => {
@@ -217,7 +219,7 @@ $(function () {
         temp.product = product;
 
         $.ajax({
-            url: `http://localhost:8080/api/order/update/${idForChanges}`,
+            url: `${urlPrefix}/api/order/update/${idForChanges}`,
             method: 'PUT',
             dataType: 'json',
             data: JSON.stringify(temp),
@@ -242,7 +244,7 @@ $(function () {
         $('#filter').on('input', (event) => {
             let filter = event.target.value;
             let filteredContent = contents.filter(elem => {
-                if (elem.category.toUpperCase().includes(filter.toUpperCase()))
+                if (elem.address.toUpperCase().includes(filter.toUpperCase()))
                     return elem;
             })
             $('.tab').remove();

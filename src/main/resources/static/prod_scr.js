@@ -18,14 +18,16 @@ $(function () {
         }
     ];
 
+    const urlPrefix = 'http://localhost:8080'
+
     const caterories = [];
-    $.get('http://localhost:8080/api/category/get', (data) =>{
+    $.get(`${urlPrefix}/api/category/get`, (data) =>{
         data.forEach(e => caterories.push(e));
         createForm()
     })
 
     const contents = [];
-    $.get('http://localhost:8080/api/product/get', (data) =>{
+    $.get(`${urlPrefix}/api/product/get`, (data) =>{
         data.forEach(e => contents.push(e));
         fillTable(contents)
     })
@@ -39,7 +41,7 @@ $(function () {
     createForm()
 
     function createForm() {
-        if ($('input').length != 0)
+        if ($('form input').length != 0)
             Array.from($('input')).forEach(e => e.remove())
         if ($('label').length != 0)
             Array.from($('label')).forEach(e => e.remove())
@@ -116,7 +118,7 @@ $(function () {
         temp.category = cat;
 
         $.ajax({
-            url: 'http://localhost:8080/api/product/post',
+            url: `${urlPrefix}/api/product/post`,
             type: 'POST',
             dataType: 'json',
             cache: false,
@@ -127,6 +129,7 @@ $(function () {
                 $('.tab').remove();
                 createTable()
                 fillTable()
+                $('.tab').click(()=>{tableFunction(event)})
             }
         })
     })
@@ -145,7 +148,7 @@ $(function () {
         $('label[for="field_3"]').text('Введите цену');
 
         $.ajax({
-            url: `http://localhost:8080/api/product/delete/${idForChanges}`,
+            url: `${urlPrefix}/api/product/delete/${idForChanges}`,
             method: 'DELETE',
             dataType: 'json',
             success: () => {
@@ -182,7 +185,7 @@ $(function () {
         temp.category = cat;
 
         $.ajax({
-            url: `http://localhost:8080/api/product/update/${idForChanges}`,
+            url: `${urlPrefix}/api/product/update/${idForChanges}`,
             method: 'PUT',
             dataType: 'json',
             data: JSON.stringify(temp),
@@ -208,7 +211,7 @@ $(function () {
     $('#filter').on('input', (event) => {
         let filter = event.target.value;
         let filteredContent = contents.filter(elem => {
-            if (elem.category.toUpperCase().includes(filter.toUpperCase()))
+            if (elem.name.toUpperCase().includes(filter.toUpperCase()))
                 return elem;
         })
         $('.tab').remove();

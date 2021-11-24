@@ -11,7 +11,9 @@ $(function () {
     ];
     const contents = [];
 
-    $.get('http://localhost:8080/api/category/get', (data) =>{
+    const urlPrefix = 'http://localhost:8080'
+
+    $.get(`${urlPrefix}/api/category/get`, (data) =>{
         data.forEach(e => contents.push(e));
         fillTable(contents)
     })
@@ -19,7 +21,7 @@ $(function () {
     createForm()
 
     function createForm() {
-        if ($('input').length != 0)
+        if ($('form input').length != 0)
             Array.from($('input')).forEach(e => e.remove())
         if ($('label').length != 0)
             Array.from($('label')).forEach(e => e.remove())
@@ -79,7 +81,7 @@ $(function () {
         temp.id = ++maxId;
 
         $.ajax({
-            url: 'http://localhost:8080/api/category/post',
+            url: `${urlPrefix}/api/category/post`,
             type: 'POST',
             dataType: 'json',
             cache: false,
@@ -107,7 +109,7 @@ $(function () {
         }
 
         $.ajax({
-            url: `http://localhost:8080/api/category/delete/${idForChanges}`,
+            url: `${urlPrefix}/api/category/delete/${idForChanges}`,
             method: 'DELETE',
             dataType: 'json',
             success: () => {
@@ -140,7 +142,7 @@ $(function () {
         temp.id = id;
 
         $.ajax({
-            url: `http://localhost:8080/api/category/update/${idForChanges}`,
+            url: `${urlPrefix}/api/category/update/${idForChanges}`,
             method: 'PUT',
             dataType: 'json',
             data: JSON.stringify(temp),
