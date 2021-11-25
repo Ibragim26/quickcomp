@@ -36,10 +36,9 @@ $(function () {
     createTable()
     $('#edit').hide()
 
-    createForm()
 
     function createForm() {
-        if ($('form input').length != 0)
+        if ($('fieldset input').length != 0)
             Array.from($('input')).forEach(e => e.remove())
         if ($('label').length != 0)
             Array.from($('label')).forEach(e => e.remove())
@@ -76,7 +75,7 @@ $(function () {
     function fillTable(content = contents, header = headers) {
         content.forEach((elem) => {
             let tr = $('<tr class="forAnyChange"></tr>').appendTo('.tab');
-            tr.attr('id', `${elem.id}`)
+            tr.attr('id', `${elem.id}`);
             header.forEach(head => {
                 if (head.field == "category"){
                     let td = $('<td></td>').appendTo(tr)
@@ -84,11 +83,11 @@ $(function () {
                     let a = null;
                     for (let key in elem.category){
                         if (key == 'category')
-                            a = elem.category[key]
+                            a = elem.category[key];
                     }
                     td.text(a);
                 }else {
-                    let td = $('<td></td>').appendTo(tr)
+                    let td = $('<td></td>').appendTo(tr);
                     td.attr('name', `${head.field}`);
                     td.text(elem[head.field]);
                 }
@@ -100,11 +99,13 @@ $(function () {
         let temp = new Object();
         let formFields = $('.prod_in');
         Array.from(formFields).forEach(ins =>{
-            let param = `${ins.name}`
+            let param = `${ins.name}`;
             temp[param] = ins.value;
             ins.value = '';
         })
 
+        if (temp.name === '') return
+        if (temp.name == '') return
         let maxId = 1;
         contents.forEach(elem => {
             if (elem.id > maxId)
@@ -120,8 +121,7 @@ $(function () {
         })
         temp.category = cat;
 
-        if (temp.name === '') return
-        if (temp.name == '') return
+
 
         $.ajax({
             url: 'api/product/post',
@@ -133,9 +133,11 @@ $(function () {
             success: () => {
                 contents.push(temp);
                 $('.tab').remove();
-                createTable()
-                fillTable()
-                $('.tab').click(()=>{tableFunction(event)})
+                createTable();
+                fillTable();
+                $('.tab').click(()=>{tableFunction(event)});
+                createForm();
+
             }
         })
     })
@@ -165,6 +167,7 @@ $(function () {
                 $('.tab').click(()=>{tableFunction(event)})
                 $('#edit').hide();
                 $('#send').show();
+                createForm();
             }
         })
     })
@@ -198,6 +201,7 @@ $(function () {
                 $('.tab').remove();
                 createTable()
                 fillTable(contents);
+                createForm();
                 $('.tab').click(()=>{tableFunction(event)})
             }
         })

@@ -13,13 +13,13 @@ $(function () {
 
     $.get('api/category/get', (data) =>{
         data.forEach(e => contents.push(e));
-        fillTable(contents)
+        fillTable(contents);
     })
 
-    createForm()
+    createForm();
 
     function createForm() {
-        if ($('form input').length != 0)
+        if ($('fieldset input').length != 0)
             Array.from($('input')).forEach(e => e.remove())
         if ($('label').length != 0)
             Array.from($('label')).forEach(e => e.remove())
@@ -29,6 +29,7 @@ $(function () {
             Array.from($('select')).forEach(e => e.remove())
         $('<label for="field_1">Категория</label>').appendTo('fieldset');
         $('<input type="text" id="field_1" name="category">').appendTo('fieldset');
+
         $('<label for="field_2">Рейтнг</label>').appendTo('fieldset');
         $('<input type="text" id="field_1" name="rating">').appendTo('fieldset');
     }
@@ -37,8 +38,8 @@ $(function () {
     let idForChanges = -1;
 
 
-    createTable()
-    $('#edit').hide()
+    createTable();
+    $('#edit').hide();
 
     function createTable(header = headers) {
         $('<table class="tab" border="2"></table>').appendTo('.dynTa');
@@ -52,9 +53,9 @@ $(function () {
     function fillTable(content = contents, header = headers) {
         content.forEach((elem) => {
             let tr = $('<tr class="forAnyChange"></tr>').appendTo('.tab');
-            tr.attr('id', `${elem.id}`)
+            tr.attr('id', `${elem.id}`);
             header.forEach(head => {
-                let td = $('<td></td>').appendTo(tr)
+                let td = $('<td></td>').appendTo(tr);
                 td.attr('name', `${head.field}`);
                 td.text(elem[head.field]);
             })
@@ -65,7 +66,7 @@ $(function () {
         let temp = new Object();
         let formFields = $('form input');
         Array.from(formFields).forEach(ins =>{
-            let param = `${ins.name}`
+            let param = `${ins.name}`;
             temp[param] = ins.value;
             ins.value = '';
         })
@@ -93,9 +94,10 @@ $(function () {
                 console.log(temp);
                 contents.push(temp);
                 $('.tab').remove();
-                createTable()
-                fillTable()
-                $('.tab').click(()=>{tableFunction(event)})
+                createTable();
+                fillTable();
+                createForm();
+                $('.tab').click(()=>{tableFunction(event)});
             }
         })
     })
@@ -115,8 +117,7 @@ $(function () {
             method: 'DELETE',
             dataType: 'json',
             success: () => {
-                let formFields = $('form input')
-
+                let formFields = $('form input');
                 Array.from(formFields).forEach(e => {
                     e.value = '';
                 })
@@ -124,9 +125,10 @@ $(function () {
                 $('#edit').hide();
                 $('#send').show();
                 $('.tab').remove();
-                createTable()
+                createTable();
                 fillTable(contents);
                 $('.tab').click(()=>{tableFunction(event)})
+                createForm();
                 id = null;
             }
         })
@@ -137,7 +139,7 @@ $(function () {
         let temp = {}
         Array.from(formFields).forEach(e => {
             temp[e.name] = e.value;
-            e.value = ''
+            e.value = '';
         })
         temp.id = id;
 
@@ -151,9 +153,10 @@ $(function () {
             success: () => {
                 contents[id] = temp;
                 $('.tab').remove();
-                createTable()
+                createTable();
                 fillTable(contents);
-                $('.tab').click(()=>{tableFunction(event)})
+                $('.tab').click(()=>{tableFunction(event)});
+                createForm();
                 id = null;
             }
         })
@@ -206,7 +209,7 @@ $(function () {
                 if (e.id == event.target.parentElement.id)
                     return e
             });
-            event.target.parentElement.classList.add('forColor')
+            event.target.parentElement.classList.add('forColor');
             idForChanges =  event.target.parentElement.id;
 
             console.log(formFields);

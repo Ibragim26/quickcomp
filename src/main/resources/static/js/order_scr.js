@@ -24,25 +24,25 @@ $(function () {
 
     $.get('api/order/get', (data) =>{
         data.forEach(e => contents.push(e));
-        fillTable(contents)
+        fillTable(contents);
     })
 
     $.get('api/product/get', (data) =>{
         data.forEach(e => products.push(e));
         $.get('api/status/get', (data) =>{
             data.forEach(e => stats.push(e));
-            createForm()
+            createForm();
         })
     })
     let id = -1;
     let idForChanges = -1;
 
-    createTable()
-    $('#edit').hide()
+    createTable();
+    $('#edit').hide();
 
 
     function createForm() {
-        if ($('form input').length != 0)
+        if ($('fieldset input').length != 0)
             Array.from($('input')).forEach(e => e.remove())
         if ($('label').length != 0)
             Array.from($('label')).forEach(e => e.remove())
@@ -152,8 +152,9 @@ $(function () {
             success: () => {
                 contents.push(temp);
                 $('.tab').remove();
-                createTable()
-                fillTable()
+                createTable();
+                fillTable();
+                createForm();
             }
         })
     })
@@ -181,7 +182,8 @@ $(function () {
                 $('#edit').hide();
                 $('#send').show();
                 $('.tab').remove();
-                createTable()
+                createTable();
+                createForm();
                 fillTable(contents);
                 $('.tab').click(()=>{tableFunction(event)})
                 id = null;
@@ -190,11 +192,11 @@ $(function () {
     })
 
     $('#edit').click( () => {
-        let formFields = $('form input')
-        let temp = {}
+        let formFields = $('form input');
+        let temp = {};
         Array.from(formFields).forEach(e => {
             temp[e.name] = e.value;
-            e.value = ''
+            e.value = '';
         })
         temp.id = id;
 
@@ -226,6 +228,7 @@ $(function () {
                 $('.tab').remove();
                 createTable()
                 fillTable(contents);
+                createForm();
                 $('.tab').click(()=>{tableFunction(event)})
                 id = null;
             }
