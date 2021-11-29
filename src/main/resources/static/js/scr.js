@@ -19,36 +19,20 @@ $(function () {
     createForm();
 
     function createForm() {
-        if ($('fieldset input').length != 0)
-            Array.from($('input')).forEach(e => e.remove())
-        if ($('label').length != 0)
-            Array.from($('label')).forEach(e => e.remove())
-        if ($('textarea').length != 0)
-            Array.from($('textarea')).forEach(e => e.remove())
-        if ($('select').length != 0)
-            Array.from($('select')).forEach(e => e.remove())
+        refreshForm();
         $('<label for="field_1">Категория</label>').appendTo('fieldset');
-        $('<input type="text" id="field_1" name="category">').appendTo('fieldset');
+        $('<input type="text" id="field_1" class="prod_in" name="category">').appendTo('fieldset');
 
         $('<label for="field_2">Рейтнг</label>').appendTo('fieldset');
-        $('<input type="text" id="field_1" name="rating">').appendTo('fieldset');
+        $('<input type="text" id="field_1" class="prod_in" name="rating">').appendTo('fieldset');
     }
 
     let id = -1;
     let idForChanges = -1;
 
-
-    createTable();
+    createTable(headers);
+    $('.tab').click(()=>{tableFunction(event)});
     $('#edit').hide();
-
-    function createTable(header = headers) {
-        $('<table class="tab" border="2"></table>').appendTo('.dynTa');
-        $('<tr class="tabhead"></tr>').appendTo('.tab');
-        header.forEach(head => {
-            let th = $('<th></th>').appendTo('.tabhead');
-            th.text(head.name);
-        });
-    }
 
     function fillTable(content = contents, header = headers) {
         content.forEach((elem) => {
@@ -62,108 +46,39 @@ $(function () {
         })
     }
 
-    $('#send').click(function(){
+    $('#send').click(()=>{
         let temp = new Object();
-        let formFields = $('form input');
+        let formFields = $('.prod_in');
         Array.from(formFields).forEach(ins =>{
             let param = `${ins.name}`;
             temp[param] = ins.value;
             ins.value = '';
         })
+        sending('category', temp, headers, contents);
+        fillTable();
+        createForm();
+        $('.tab').click(()=>{tableFunction(event)});
+    });
 
-        let maxId = 0;
-        contents.forEach(elem => {
-            if (elem.id > maxId)
-                maxId = elem.id;
-        })
+    $('#delete').click(() => {
+        deleting('category', id, idForChanges, headers, contents);
+        fillTable();
+        $('.tab').click(()=>{tableFunction(event)})
+        createForm();
+    });
 
-        temp.id = ++maxId;
-
-        if (temp.category === '') return
-        if (temp.category == '') return
-
-
-        $.ajax({
-            url: 'api/category/post',
-            type: 'POST',
-            dataType: 'json',
-            cache: false,
-            contentType: 'application/json',
-            data: JSON.stringify(temp),
-            success: () => {
-                console.log(temp);
-                contents.push(temp);
-                $('.tab').remove();
-                createTable();
-                fillTable();
-                createForm();
-                $('.tab').click(()=>{tableFunction(event)});
-            }
-        })
-    })
-
-    $('.tab').click(()=>{tableFunction(event)})
-
-    $('#delete').click(function () {
-        if (id === null || id === undefined) return;
-        let result = confirm('Удалить выбранную строку ?');
-        if (!result) {
-            $('.forColor').removeClass('forColor');
-            return;
-        }
-
-        $.ajax({
-            url: `api/category/delete/${idForChanges}`,
-            method: 'DELETE',
-            dataType: 'json',
-            success: () => {
-                let formFields = $('form input');
-                Array.from(formFields).forEach(e => {
-                    e.value = '';
-                })
-                contents.splice(id, 1);
-                $('#edit').hide();
-                $('#send').show();
-                $('.tab').remove();
-                createTable();
-                fillTable(contents);
-                $('.tab').click(()=>{tableFunction(event)})
-                createForm();
-                id = null;
-            }
-        })
-    })
-
-    $('#edit').click( () => {
-        let formFields = $('form input')
-        let temp = {}
+    $('#edit').click(() => {
+        let temp = {};
+        let formFields = $('.prod_in');
         Array.from(formFields).forEach(e => {
             temp[e.name] = e.value;
             e.value = '';
         })
-        temp.id = id;
-
-        $.ajax({
-            url: `api/category/update/${idForChanges}`,
-            method: 'PUT',
-            dataType: 'json',
-            data: JSON.stringify(temp),
-            cache: false,
-            contentType: 'application/json',
-            success: () => {
-                contents[id] = temp;
-                $('.tab').remove();
-                createTable();
-                fillTable(contents);
-                $('.tab').click(()=>{tableFunction(event)});
-                createForm();
-                id = null;
-            }
-        })
-
-        $('#edit').hide();
-        $('#send').show();
-    })
+        editing('category', temp, id, idForChanges, headers, contents);
+        fillTable(contents);
+        $('.tab').click(()=>{tableFunction(event)});
+        createForm();
+    });
 
     $('#filter').on('input', (event) => {
         let filter = event.target.value;
@@ -172,31 +87,19 @@ $(function () {
                 return elem;
         })
         $('.tab').remove();
-        createTable();
+        createTable(headers);
         fillTable(filteredContent);
         $('.tab').click(()=>{tableFunction(event)})
     })
 
     $('#asc').click(()=>{
-        contents.sort( (a, b)=> {
-            if (a.category.charAt(0) === b.category.charAt(0)) return 0
-            else if (a.category.charAt(0) > b.category.charAt(0)) return 1
-            else return -1
-        })
-        $('.tab').remove();
-        createTable();
+        ascing(headers, contents, 'category')
         fillTable(contents);
         $('.tab').click(()=>{tableFunction(event)})
     })
 
     $('#desc').click(()=>{
-        contents.sort( (a, b)=> {
-            if (a.category.charAt(0) === b.category.charAt(0)) return 0
-            else if (a.category.charAt(0) < b.category.charAt(0)) return 1
-            else return -1
-        })
-        $('.tab').remove();
-        createTable();
+        descing(headers, contents, 'category')
         fillTable(contents);
         $('.tab').click(()=>{tableFunction(event)})
     })
@@ -211,8 +114,6 @@ $(function () {
             });
             event.target.parentElement.classList.add('forColor');
             idForChanges =  event.target.parentElement.id;
-
-            console.log(formFields);
             Array.from(formFields).forEach(e => {
                 e.value = $(`.forColor td[name=${e.name}]`).text()
             })

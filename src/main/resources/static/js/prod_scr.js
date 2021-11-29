@@ -21,31 +21,24 @@ $(function () {
     const caterories = [];
     $.get('api/category/get', (data) =>{
         data.forEach(e => caterories.push(e));
-        createForm()
+        createForm();
     })
 
     const contents = [];
     $.get('api/product/get', (data) =>{
         data.forEach(e => contents.push(e));
-        fillTable(contents)
+        fillTable(contents);
+        $('.tab').click(()=>{tableFunction(event)});
     })
 
     let id = -1;
     let idForChanges = -1;
 
-    createTable()
-    $('#edit').hide()
-
+    createTable();
+    $('#edit').hide();
 
     function createForm() {
-        if ($('fieldset input').length != 0)
-            Array.from($('input')).forEach(e => e.remove())
-        if ($('label').length != 0)
-            Array.from($('label')).forEach(e => e.remove())
-        if ($('textarea').length != 0)
-            Array.from($('textarea')).forEach(e => e.remove())
-        if ($('select').length != 0)
-            Array.from($('select')).forEach(e => e.remove())
+        refreshForm();
 
         $('<label for="field_1">Имя продукта</label>').appendTo('fieldset');
         $('<input type="text" id="field_1" name="name" class="prod_in">').appendTo('fieldset');
@@ -95,92 +88,40 @@ $(function () {
         })
     }
 
-    $('#send').click(function(){
-        let temp = new Object();
+    $('#send').click(()=>{
         let formFields = $('.prod_in');
         Array.from(formFields).forEach(ins =>{
             let param = `${ins.name}`;
             temp[param] = ins.value;
             ins.value = '';
         })
-
-        if (temp.name === '') return
-        if (temp.name == '') return
-        let maxId = 1;
-        contents.forEach(elem => {
-            if (elem.id > maxId)
-                maxId = elem.id;
-        })
-        temp.id = ++maxId;
-
+        let temp = new Object();
         let cat = null;
         caterories.forEach(e => {
             if (e.id == temp.category){
                 cat = e;
             }
         })
-        temp.category = cat;
+        sending('product', temp, headers, contents);
+        fillTable();
+        createForm();
+        $('.tab').click(()=>{tableFunction(event)});
+    });
 
+    $('#delete').click(() => {
+        deleting('product', id, idForChanges, headers, contents);
+        fillTable();
+        $('.tab').click(()=>{tableFunction(event)})
+        createForm();
+    });
 
-
-        $.ajax({
-            url: 'api/product/post',
-            type: 'POST',
-            dataType: 'json',
-            cache: false,
-            contentType: 'application/json',
-            data: JSON.stringify(temp),
-            success: () => {
-                contents.push(temp);
-                $('.tab').remove();
-                createTable();
-                fillTable();
-                $('.tab').click(()=>{tableFunction(event)});
-                createForm();
-
-            }
-        })
-    })
-    $('.tab').click(()=>{tableFunction(event)})
-
-    $('#delete').click(function () {
-        if (id === null || id === undefined) return;
-        let result = confirm('Удалить выбранную строку ?');
-        if (!result) {
-            $('.forColor').removeClass('forColor');
-            return;
-        }
-
-        $.ajax({
-            url: `/api/product/delete/${idForChanges}`,
-            method: 'DELETE',
-            dataType: 'json',
-            success: () => {
-                let formFields = $('.prod_in')
-                Array.from(formFields).forEach(e => {
-                    e.value = '';
-                })
-                contents.splice(id, 1);
-                $('.tab').remove();
-                createTable()
-                fillTable(contents);
-                $('.tab').click(()=>{tableFunction(event)})
-                $('#edit').hide();
-                $('#send').show();
-                createForm();
-            }
-        })
-    })
-
-    $('#edit').click( () => {
-        let formFields = $('.prod_in')
-        let temp = {}
+    $('#edit').click(() => {
+        let temp = {};
+        let formFields = $('.prod_in');
         Array.from(formFields).forEach(e => {
             temp[e.name] = e.value;
-            e.value = ''
+            e.value = '';
         })
-        temp.id = idForChanges;
-
         let cat = null;
         caterories.forEach(e => {
             if (e.id == temp.category){
@@ -188,27 +129,11 @@ $(function () {
             }
         })
         temp.category = cat;
-
-        $.ajax({
-            url: `/api/product/update/${idForChanges}`,
-            method: 'PUT',
-            dataType: 'json',
-            data: JSON.stringify(temp),
-            cache: false,
-            contentType: 'application/json',
-            success: () => {
-                contents[id] = temp;
-                $('.tab').remove();
-                createTable()
-                fillTable(contents);
-                createForm();
-                $('.tab').click(()=>{tableFunction(event)})
-            }
-        })
-
-        $('#edit').hide();
-        $('#send').show();
-    })
+        editing('product', temp, id, idForChanges, headers, contents);
+        fillTable(contents);
+        $('.tab').click(()=>{tableFunction(event)});
+        createForm();
+    });
 
     $('#filter').on('input', (event) => {
         let filter = event.target.value;
@@ -223,25 +148,13 @@ $(function () {
     })
 
     $('#asc').click(()=>{
-        contents.sort( (a, b)=> {
-            if (a.name.charAt(0) === b.name.charAt(0)) return 0
-            else if (a.name.charAt(0) > b.name.charAt(0)) return 1
-            else return -1
-        })
-        $('.tab').remove();
-        createTable();
+        ascing(headers, contents, 'name')
         fillTable(contents);
         $('.tab').click(()=>{tableFunction(event)})
     })
 
     $('#desc').click(()=>{
-        contents.sort( (a, b)=> {
-            if (a.name.charAt(0) === b.name.charAt(0)) return 0
-            else if (a.name.charAt(0) < b.name.charAt(0)) return 1
-            else return -1
-        })
-        $('.tab').remove();
-        createTable();
+        descing(headers, contents, 'name')
         fillTable(contents);
         $('.tab').click(()=>{tableFunction(event)})
     })
@@ -255,9 +168,7 @@ $(function () {
                     return e
             });
             event.target.parentElement.classList.add('forColor')
-
             idForChanges = event.target.parentElement.id
-
             Array.from(formFields).forEach(e => {
                 e.value = $(`.forColor td[name=${e.name}]`).text()
             })
