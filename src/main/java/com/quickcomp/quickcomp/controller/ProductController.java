@@ -2,6 +2,7 @@ package com.quickcomp.quickcomp.controller;
 
 import com.quickcomp.quickcomp.model.entity.Product;
 import com.quickcomp.quickcomp.service.impl.ProductServiceImpl;
+import com.quickcomp.quickcomp.service.interfaces.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,7 @@ import java.util.List;
 //@CrossOrigin
 public class ProductController
 {
-    private ProductServiceImpl productService;
+    private ProductService productService;
     @Autowired
     public ProductController(ProductServiceImpl productService) {
         this.productService = productService;

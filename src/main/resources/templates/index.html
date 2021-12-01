@@ -16,7 +16,7 @@
     <nav>
         <a class="menu" href="#" onclick="catScr()">Категории</a>
         <a class="menu" href="#" onclick="prodScr()">Продукты</a>
-        <a class="menu" href="#" onclick="ordScr()">Заказы</a>
+        <a class="menu" href="/order">Заказы</a>
         <a class="menu" href="#">Доставка</a>
         <a class="menu" href="#">О нас</a>
     </nav>
@@ -182,16 +182,6 @@
         let a = document.createElement('script')
         a.setAttribute('id', 'navigation');
         a.setAttribute('src', '../js/prod_scr.js')
-        document.getElementsByTagName('head')[0].appendChild(a);
-    }
-    function ordScr(){
-        if( $('.tab').length)
-            $('.tab').remove();
-        if ($('#navigation'))
-            $('#navigation').remove()
-        let a = document.createElement('script')
-        a.setAttribute('id', 'navigation');
-        a.setAttribute('src', '../js/order_scr.js')
         document.getElementsByTagName('head')[0].appendChild(a);
     }
 </script>

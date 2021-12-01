@@ -2,6 +2,7 @@ package com.quickcomp.quickcomp.controller;
 
 import com.quickcomp.quickcomp.model.entity.Category;
 import com.quickcomp.quickcomp.service.impl.CategoryServiceImpl;
+import com.quickcomp.quickcomp.service.interfaces.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,7 @@ import java.util.List;
 //@CrossOrigin
 public class CategoryController {
 
-    private CategoryServiceImpl categoryService;
+    private CategoryService categoryService;
     @Autowired
     public CategoryController(CategoryServiceImpl categoryService) {
         this.categoryService = categoryService;

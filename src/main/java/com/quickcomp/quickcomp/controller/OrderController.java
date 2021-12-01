@@ -2,6 +2,7 @@ package com.quickcomp.quickcomp.controller;
 
 import com.quickcomp.quickcomp.model.entity.Order;
 import com.quickcomp.quickcomp.service.impl.OrderServiceImpl;
+import com.quickcomp.quickcomp.service.interfaces.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -12,10 +13,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/order")
-//@CrossOrigin
 public class OrderController {
 
-    private OrderServiceImpl orderService;
+    private OrderService orderService;
     @Autowired
     public OrderController(OrderServiceImpl orderService) {
         this.orderService = orderService;

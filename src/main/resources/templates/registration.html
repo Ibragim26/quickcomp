@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>QuickComp</title>
+</head>
+<body>
+    <h2>Зарегистрируйтесь</h2>
+
+    <form th:action="@{/registration}" method="post" th:object="${user}">
+        Имя пользователя: <input type="text" name="username"><br><br>
+        Эл. почта: <input type="email" name="email"><br><br>
+        Пароль: <input type="password" name="password"><br><br>
+        <input type="submit" value="Зарегистрироваться"/>
+    </form>
+</body>
+</html>
