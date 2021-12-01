@@ -26,6 +26,16 @@
         <button id="asc" type="button" class="button_menu">сортировать по возрастанию</button>
         <button id="desc" type="button" class="button_menu">сортировать по убыванию</button>
         <input type="text" id="filter" placeholder="Фильтр">
+        <div th:if="${authorized}" class="button_menu">
+            <p th:text="${authorized.getUsername()}" class="button_menu"></p>
+            <form th:action="@{/logout}" method="post"  class="button_menu">
+                <input type="submit" value="выйти"  class="button_menu">
+            </form>
+        </div>
+        <div th:unless="${authorized}" class="button_menu">
+            <a href="login.html">Войти</a>
+        </div>
+
         <div class="dynTa"></div>
         <aside>
             <form id="form">
@@ -59,11 +69,11 @@
     function refreshForm() {
         if ($('fieldset input').length)
             Array.from($('input')).forEach(e => e.remove())
-        if ($('label').length)
+        if ($('fieldset label').length)
             Array.from($('label')).forEach(e => e.remove())
-        if ($('textarea').length)
+        if ($('fieldset textarea').length)
             Array.from($('textarea')).forEach(e => e.remove())
-        if ($('select').length)
+        if ($('fieldset select').length)
             Array.from($('select')).forEach(e => e.remove())
     }
     function createTable(header){

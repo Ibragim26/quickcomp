@@ -7,5 +7,6 @@ public interface UserService {
 
     boolean createUser(User user);
     User findById(Long id);
+    User findByUsername(String username);
 
 }

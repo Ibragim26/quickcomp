@@ -3,12 +3,14 @@ package com.quickcomp.quickcomp.controller;
 import com.quickcomp.quickcomp.model.entity.Order;
 import com.quickcomp.quickcomp.service.impl.OrderServiceImpl;
 import com.quickcomp.quickcomp.service.interfaces.OrderService;
+import com.quickcomp.quickcomp.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -16,10 +18,13 @@ import java.util.List;
 public class OrderController {
 
     private OrderService orderService;
+    private UserService userService;
     @Autowired
-    public OrderController(OrderServiceImpl orderService) {
+    public OrderController(OrderService orderService, UserService userService) {
         this.orderService = orderService;
+        this.userService = userService;
     }
+
 
     @GetMapping("/get/{id}")
     public ResponseEntity<Order> getOrderById(@PathVariable Long id){
@@ -40,21 +45,23 @@ public class OrderController {
     }
 
     @PostMapping("/post")
-    public ResponseEntity<Order> saveOrder(@RequestBody Order order){
+    public ResponseEntity<Order> saveOrder(@RequestBody Order order, Principal principal){
         HttpHeaders headers = new HttpHeaders();
 
         if (order == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        order.setAuthor(userService.findByUsername(principal.getName()));
         orderService.save(order);
         return new ResponseEntity<>(order, headers, HttpStatus.CREATED);
     }
     @PutMapping("/update/{id}")
-    public ResponseEntity<Order> updateOrder(@PathVariable Long id, @RequestBody Order order){
+    public ResponseEntity<Order> updateOrder(@PathVariable Long id, @RequestBody Order order, Principal principal){
         HttpHeaders headers = new HttpHeaders();
         if ((order) == null || (id == null)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        order.setAuthor(userService.findByUsername(principal.getName()));
         orderService.save(order);
         return new ResponseEntity<>(order, headers, HttpStatus.CREATED);
     }
