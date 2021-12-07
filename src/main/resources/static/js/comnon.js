@@ -179,6 +179,7 @@ $(function () {
     }
 
     $('#send').click(()=>{
+
         let temp = {};
         let formFields = $('.prod_in');
         Array.from(formFields).forEach(ins =>{
@@ -210,6 +211,7 @@ $(function () {
                 }
             })
         }
+        console.log(state)
         let token = $("meta[name='_csrf']").attr("content");
         $.ajax({
             url: `api/${state}/post`,
@@ -337,8 +339,8 @@ $(function () {
         console.log(filteredField)
         content.sort((a, b)=> {
             console.log(a[`${filteredField}`])
-            if (a[`${filteredField}`].charAt(0) == b[`${filteredField}`].charAt(0)) return 0
-            else if (a[`${filteredField}`].charAt(0) > b[`${filteredField}`].charAt(0)) return 1
+            if (a[filteredField].charAt(0) == b[filteredField].charAt(0)) return 0
+            else if (a[filteredField].charAt(0) > b[filteredField].charAt(0)) return 1
             else return -1
         })
        init();
@@ -353,16 +355,13 @@ $(function () {
         }else if (state == 'order'){
             filteredField = 'address';
         }
-
-        console.log(filteredField);
         content.sort((a, b)=> {
-            if (a[`${filteredField}`].charAt(0) == b[`${filteredField}`].charAt(0)) return 0
-            else if (a[`${filteredField}`].charAt(0) < b[`${filteredField}`].charAt(0)) return 1
+            if (a[filteredField].charAt(0) == b[filteredField].charAt(0)) return 0
+            else if (a[filteredField].charAt(0) < b[filteredField].charAt(0)) return 1
             else return -1
         })
         init();
     })
-
 
     function tableFunction(event) {
         if (event.target.parentElement.className === 'forAnyChange') {
@@ -377,8 +376,6 @@ $(function () {
             Array.from(formFields).forEach(e => {
                 e.value = $(`.forColor td[name=${e.name}]`).text()
             })
-            console.log(`id ${id}`)
-            console.log(`idForChanges ${idForChanges}`)
             $('#edit').show();
             $('#send').hide();
         }

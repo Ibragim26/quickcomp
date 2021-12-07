@@ -24,12 +24,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductCategoryDTO getById(Long id) {
-        ProductCategoryDTO productCategoryDTO = new ProductCategoryDTO();
-        productCategoryDTO.setId(id);
-        productCategoryDTO.setCategory(productRepository.getById(id).getCategory().getCategory());
-        productCategoryDTO.setDescription(productRepository.getById(id).getDescription());
-        productCategoryDTO.setName(productRepository.getById(id).getName());
-        productCategoryDTO.setPrice(productRepository.getById(id).getPrice());
+        ProductCategoryDTO productCategoryDTO = new ProductCategoryDTO(productRepository.getById(id));
         return productCategoryDTO;
     }
 
@@ -46,14 +41,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductCategoryDTO> getAll() {
 
-        List<ProductCategoryDTO> list = productRepository.findAll()
+        List<Product> products = productRepository.findAll();
+        List<ProductCategoryDTO> list = products
                 .stream().map(product -> {
-                    ProductCategoryDTO temp = new ProductCategoryDTO();
-                    temp.setId(product.getId());
-                    temp.setCategory(product.getCategory().getCategory());
-                    temp.setDescription(product.getDescription());
-                    temp.setName(product.getName());
-                    temp.setPrice(product.getPrice());
+                    ProductCategoryDTO temp = new ProductCategoryDTO(product);
                     return temp;
         }).collect(Collectors.toList());
         return list;

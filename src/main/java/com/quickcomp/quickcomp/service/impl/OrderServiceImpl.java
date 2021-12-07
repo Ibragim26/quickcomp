@@ -21,12 +21,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDTO getById(Long id) {
-        OrderDTO order = new OrderDTO();
-        order.setId(id);
-        order.setAddress(orderRepository.getById(id).getAddress());
-        order.setDate(orderRepository.getById(id).getDate());
-        order.setOrderStatus(orderRepository.getById(id).getOrderStatus().getStatus());
-        order.setProduct(orderRepository.getById(id).getProduct().getName());
+        OrderDTO order = new OrderDTO(orderRepository.getById(id));
         return order;
     }
 
@@ -44,12 +39,7 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderDTO> getAll() {
         List<OrderDTO> list = orderRepository.findAll()
                 .stream().map(element -> {
-                    OrderDTO order = new OrderDTO();
-                    order.setId(element.getId());
-                    order.setOrderStatus(element.getOrderStatus().getStatus());
-                    order.setDate(element.getDate());
-                    order.setAddress(element.getAddress());
-                    order.setProduct(element.getProduct().getName());
+                    OrderDTO order = new OrderDTO(element);
                     return order;
                 }).collect(Collectors.toList());
         return list;

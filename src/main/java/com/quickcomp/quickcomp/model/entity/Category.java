@@ -9,7 +9,7 @@ import java.util.List;
 @Table(name = "category")
 @Getter
 @Setter
-@NoArgsConstructor
+//@NoArgsConstructor
 @EqualsAndHashCode
 public class Category {
 
@@ -20,4 +20,6 @@ public class Category {
     private String category;
     private String rating;
 
+    public Category() {
+    }
 }

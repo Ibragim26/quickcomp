@@ -13,13 +13,14 @@ import java.util.Date;
 //@Builder
 @NoArgsConstructor
 @EqualsAndHashCode
+@AllArgsConstructor
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "product_id")
     private Product product;
 
@@ -33,4 +34,10 @@ public class Order {
     @JoinColumn(name = "order_status_id")
     private OrderStatus orderStatus;
 
+    public Order(Product product, String address, Date date, OrderStatus orderStatus) {
+        this.product = product;
+        this.address = address;
+        this.date = date;
+        this.orderStatus = orderStatus;
+    }
 }

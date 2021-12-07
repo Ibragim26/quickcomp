@@ -43,7 +43,6 @@ public class CategoryController {
     @PostMapping("/post")
     public ResponseEntity<Category> saveCategory(@RequestBody Category category){
         HttpHeaders headers = new HttpHeaders();
-
         if (category == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
