@@ -28,9 +28,6 @@ public class Order {
     @Temporal(TemporalType.DATE)
     private Date date = new Date();
 
-    @ManyToOne(cascade = CascadeType.REFRESH)
-    @JoinColumn(name="user_id")
-    private User author;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_status_id")

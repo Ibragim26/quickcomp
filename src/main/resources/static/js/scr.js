@@ -1,4 +1,5 @@
 $(function () {
+
     const headers = [
         {
             name: 'Наименование',
@@ -9,10 +10,11 @@ $(function () {
             field: 'rating'
         }
     ];
-    const contents = [];
+    let contents = [];
 
     $.get('api/category/get', (data) =>{
-        data.forEach(e => contents.push(e));
+        contents = data
+        // inf.forEach(e => contents.push(e))
         fillTable(contents);
     })
 

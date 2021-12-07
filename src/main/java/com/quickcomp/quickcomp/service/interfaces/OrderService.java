@@ -1,5 +1,6 @@
 package com.quickcomp.quickcomp.service.interfaces;
 
+import com.quickcomp.quickcomp.dto.OrderDTO;
 import com.quickcomp.quickcomp.model.entity.Order;
 
 import java.util.List;
@@ -7,11 +8,11 @@ import java.util.List;
 public interface OrderService {
 
 
-    Order getById(Long id);
+    OrderDTO getById(Long id);
 
     void save(Order order);
 
     void delete(Long id);
 
-    List<Order> getAll();
+    List<OrderDTO> getAll();
 }

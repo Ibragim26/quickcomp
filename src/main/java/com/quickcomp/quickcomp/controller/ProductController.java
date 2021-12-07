@@ -1,5 +1,6 @@
 package com.quickcomp.quickcomp.controller;
 
+import com.quickcomp.quickcomp.dto.ProductCategoryDTO;
 import com.quickcomp.quickcomp.model.entity.Product;
 import com.quickcomp.quickcomp.service.impl.ProductServiceImpl;
 import com.quickcomp.quickcomp.service.interfaces.ProductService;
@@ -23,17 +24,17 @@ public class ProductController
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id){
+    public ResponseEntity<ProductCategoryDTO> getProductById(@PathVariable Long id){
         if (id == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        Product product = productService.getById(id);
+        ProductCategoryDTO product = productService.getById(id);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     @GetMapping("/get")
-    public ResponseEntity<List<Product>> getAll(){
-        List<Product> products = productService.getAll();
+    public ResponseEntity<List<ProductCategoryDTO>> getAll(){
+        List<ProductCategoryDTO> products = productService.getAll();
         if (products.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -46,6 +47,7 @@ public class ProductController
         if (product == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
         productService.save(product);
         return new ResponseEntity<>(product, headers, HttpStatus.CREATED);
 
@@ -61,7 +63,7 @@ public class ProductController
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Product> deleteProduct(@PathVariable Long id){
-        Product product = productService.getById(id);
+        ProductCategoryDTO product = productService.getById(id);
         if (product == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

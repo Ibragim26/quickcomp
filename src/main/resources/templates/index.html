@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"
+          th:name="${_csrf.parameterName}" th:content="${_csrf.token}">
     <title>QuickComp</title>
     <link rel="stylesheet" href="../css/styles.css">
+    <script src="../js/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <div class="wrapper">
     <header>
-
-        <img id="imgh" src="../photo-1593640495253-23196b27a87f.jpg" alt="comp" width="300">
+        <img id="imgh" src="../images/photo-1593640495253-23196b27a87f.jpg" alt="comp" width="300">
         <h1>QuickComp</h1>
     </header>
 
     <nav>
-        <a class="menu" href="#" onclick="catScr()">Категории</a>
-        <a class="menu" href="#" onclick="prodScr()">Продукты</a>
+        <a class="menu" href="#" id="category" >Категории</a>
+        <a class="menu" href="#" id="product">Продукты</a>
         <a class="menu" href="/order">Заказы</a>
         <a class="menu" href="#">Доставка</a>
         <a class="menu" href="#">О нас</a>
@@ -33,7 +34,7 @@
             </form>
         </div>
         <div th:unless="${authorized}" class="button_menu">
-            <a href="login.html">Войти</a>
+            <a th:href="@{/login}">Войти</a>
         </div>
         <div class="dynTa"></div>
         <aside>
@@ -62,137 +63,6 @@
         </div>
     </div>
 </footer>
-<script src="../js/jquery-3.6.0.min.js"></script>
-<script>
-
-     function refreshForm() {
-         if ($('fieldset input').length)
-             Array.from($('input')).forEach(e => e.remove())
-         if ($('fieldset label').length)
-             Array.from($('label')).forEach(e => e.remove())
-         if ($('fieldset textarea').length)
-             Array.from($('textarea')).forEach(e => e.remove())
-         if ($('fieldset select').length)
-             Array.from($('select')).forEach(e => e.remove())
-     }
-     function createTable(header){
-         $('<table class="tab" border="2"></table>').appendTo('.dynTa');
-         $('<tr class="tabhead"></tr>').appendTo('.tab');
-         header.forEach(head => {
-            let th = $('<th></th>').appendTo('.tabhead');
-            th.text(head.name);
-         });
-     }
-
-     function sending(url, temp, headers, contents) {
-         let maxId = 0;
-         contents.forEach(elem => {
-             if (elem.id > maxId)
-                 maxId = elem.id;
-         })
-         temp.id = ++maxId;
-         $.ajax({
-             url: `api/${url}/post`,
-             type: 'POST',
-             dataType: 'json',
-             cache: false,
-             contentType: 'application/json',
-             data: JSON.stringify(temp),
-             success: (e) => {
-                 e.request = '';
-                 console.log(temp);
-                 contents.push(temp);
-                 $('.tab').remove();
-                 createTable(headers);
-             }
-         })
-     }
-
-     function deleting(url, id, idForChanges, headers, contents) {
-         if (id === null || id === undefined) return;
-         let result = confirm('Удалить выбранную строку ?');
-         if (!result) {
-             $('.forColor').removeClass('forColor');
-             return;
-         }
-         $.ajax({
-             url: `api/${url}/delete/${idForChanges}`,
-             method: 'DELETE',
-             dataType: 'json',
-             success: () => {
-                 let formFields = $('form input');
-                 Array.from(formFields).forEach(e => {
-                     e.value = '';
-                 })
-                 contents.splice(id, 1);
-                 $('#edit').hide();
-                 $('#send').show();
-                 $('.tab').remove();
-                 createTable(headers);
-             }
-         })
-     }
-
-     function editing(url, temp, id, idForChanges, headers, contents) {
-         temp.id = id;
-         $.ajax({
-             url: `api/${url}/update/${idForChanges}`,
-             method: 'PUT',
-             dataType: 'json',
-             data: JSON.stringify(temp),
-             cache: false,
-             contentType: 'application/json',
-             success: () => {
-                 $('#edit').hide();
-                 $('#send').show();
-                 contents[id] = temp;
-                 $('.tab').remove();
-                 createTable(headers);
-
-             }
-         })
-     }
-
-     function ascing(headers, contents, filteredField) {
-         contents.sort((a, b)=> {
-             let f = filteredField;
-             if (a[filteredField].charAt(0) === b[filteredField].charAt(0)) return 0
-             else if (a[filteredField].charAt(0) > b[filteredField].charAt(0)) return 1
-             else return -1
-         })
-         $('.tab').remove();
-         createTable(headers);
-     }
-     function descing(headers, contents, filteredField) {
-         contents.sort((a, b)=> {
-             if (a[filteredField].charAt(0) === b[filteredField].charAt(0)) return 0
-             else if (a[filteredField].charAt(0) < b[filteredField].charAt(0)) return 1
-             else return -1
-         })
-         $('.tab').remove();
-         createTable(headers);
-     }
-
-    function catScr(){
-        if($('.tab').length)
-            $('.tab').remove();
-        if($('#navigation'))
-            $('#navigation').remove()
-        let a = document.createElement('script')
-        a.setAttribute('id', 'navigation');
-        a.setAttribute('src', '../js/scr.js')
-        document.getElementsByTagName('head')[0].appendChild(a);
-    }
-    function prodScr(){
-        if( $('.tab').length)
-            $('.tab').remove();
-        if ($('#navigation'))
-            $('#navigation').remove()
-        let a = document.createElement('script')
-        a.setAttribute('id', 'navigation');
-        a.setAttribute('src', '../js/prod_scr.js')
-        document.getElementsByTagName('head')[0].appendChild(a);
-    }
-</script>
+<script src="../js/comnon.js"></script>
 </body>
 </html>

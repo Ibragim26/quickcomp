@@ -35,9 +35,6 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles = new HashSet<>();
 
-    @OneToMany(mappedBy="author")
-    private List<Order> orders;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
