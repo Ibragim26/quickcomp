@@ -1,7 +1,8 @@
 package com.quickcomp.quickcomp.model.entity;
 
-import jdk.jfr.Timespan;
+//import jdk.jfr.Timespan;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -26,7 +27,8 @@ public class Order {
 
 
     private String address;
-    @Temporal(TemporalType.DATE)
+//    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date = new Date();
 
 

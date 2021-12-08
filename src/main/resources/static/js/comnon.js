@@ -199,19 +199,30 @@ $(function () {
                 }
             })
         }
+        console.log(categoryForProduct)
         if (state == 'order') {
             statsForOrder.forEach(e => {
                 if (e.id == temp.orderStatus){
                     temp.orderStatus = e;
                 }
             })
+            let x;
             productsForOrder.forEach(e => {
                 if (e.id == temp.product){
                     temp.product = e;
+                    $.get('api/category/get', (data) => {
+                        categoryForProduct = data;
+                        console.log(categoryForProduct)
+                        categoryForProduct.forEach(e => {
+                            if (e.category == temp.product.category) {
+                                x = e;
+                            }
+                        })
+                    })
                 }
             })
+            temp.product.category = x;
         }
-        console.log(state)
         let token = $("meta[name='_csrf']").attr("content");
         $.ajax({
             url: `api/${state}/post`,
@@ -269,6 +280,7 @@ $(function () {
                 }
             })
         }
+
         if (state == 'order') {
             statsForOrder.forEach(e => {
                 if (e.id == temp.orderStatus){
