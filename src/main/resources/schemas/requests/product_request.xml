@@ -1,0 +1,9 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:us="http://quickcomp.com/quickcomp/soap/product/">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <us:getProductRequest>
+            <us:orderId>1</us:orderId>
+        </us:getProductRequest>
+    </soapenv:Body>
+</soapenv:Envelope>

@@ -23,36 +23,34 @@ public class WebSoapConfig {
             return new ServletRegistrationBean(servlet, "/soapWS/*");
         }
 
+        @Bean
+        public XsdSchema orderSchema() {
+            return new SimpleXsdSchema(new ClassPathResource("schemas/orders.xsd"));
+        }
+        @Bean
+        public XsdSchema productSchema() {
+            return new SimpleXsdSchema(new ClassPathResource("schemas/products.xsd"));
+        }
 
-//        @Bean
-//        public XsdSchema orderSchema() {
-//            return new SimpleXsdSchema(new ClassPathResource("//static/schemas/orders.xsd"));
-//        }
-//        @Bean
-//        public XsdSchema productSchema() {
-//            return new SimpleXsdSchema(new ClassPathResource("../schemas/products.xsd"));
-//        }
 
+        @Bean
+        public DefaultWsdl11Definition defaultWsdl11DefinitionOrder(XsdSchema orderSchema) {
+            DefaultWsdl11Definition definition = new DefaultWsdl11Definition();
+            definition.setSchema(orderSchema);
+            definition.setLocationUri("/soapWS/order");
+            definition.setPortTypeName("OrderServicePort");
+            definition.setTargetNamespace("http://quickcomp.com/quickcomp/soap/order/");
+            return definition;
+        }
+        @Bean
+        public DefaultWsdl11Definition defaultWsdl11DefinitionProduct(XsdSchema productSchema) {
 
-//        @Bean
-//        public DefaultWsdl11Definition defaultWsdl11DefinitionOrder(XsdSchema orderSchema) {
-//
-//            DefaultWsdl11Definition definition = new DefaultWsdl11Definition();
-//            definition.setSchema(orderSchema);
-//            definition.setLocationUri("/soapWS");
-//            definition.setPortTypeName("OrderServicePort");
-//            definition.setTargetNamespace("http://quickcomp.com/quickcomp/soap/order/");
-//            return definition;
-//        }
-//        @Bean
-//        public DefaultWsdl11Definition defaultWsdl11DefinitionProduct(XsdSchema productSchema) {
-//
-//            DefaultWsdl11Definition definition = new DefaultWsdl11Definition();
-//            definition.setSchema(productSchema);
-//            definition.setLocationUri("/soapWS");
-//            definition.setPortTypeName("ProductServicePort");
-//            definition.setTargetNamespace("http://quickcomp.com/quickcomp/soap/product/");
-//            return definition;
-//        }
+            DefaultWsdl11Definition definition = new DefaultWsdl11Definition();
+            definition.setSchema(productSchema);
+            definition.setLocationUri("/soapWS/product");
+            definition.setPortTypeName("ProductServicePort");
+            definition.setTargetNamespace("http://quickcomp.com/quickcomp/soap/product/");
+            return definition;
+        }
 
 }

@@ -1,6 +1,7 @@
 package com.quickcomp.quickcomp.controller;
 
 import com.quickcomp.quickcomp.dto.ProductCategoryDTO;
+import com.quickcomp.quickcomp.dto.ProductForPersistDTO;
 import com.quickcomp.quickcomp.model.entity.Product;
 import com.quickcomp.quickcomp.service.impl.ProductServiceImpl;
 import com.quickcomp.quickcomp.service.interfaces.ProductService;
@@ -42,24 +43,23 @@ public class ProductController
     }
 
     @PostMapping("/post")
-    public ResponseEntity<Product> saveProduct(@RequestBody Product product){
+    public ResponseEntity<Product> saveProduct(@RequestBody ProductForPersistDTO product){
         HttpHeaders headers = new HttpHeaders();
         if (product == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
-        productService.save(product);
-        return new ResponseEntity<>(product, headers, HttpStatus.CREATED);
+        Product temp = productService.save(product);
+        return new ResponseEntity<>(temp, headers, HttpStatus.CREATED);
 
     }
     @PutMapping("/update/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product){
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody ProductForPersistDTO product){
         HttpHeaders headers = new HttpHeaders();
         if ((product) == null || (id == null)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        productService.save(product);
-        return new ResponseEntity<>(product, headers, HttpStatus.CREATED);
+        Product temp = productService.save(product);
+        return new ResponseEntity<>(temp, headers, HttpStatus.CREATED);
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Product> deleteProduct(@PathVariable Long id){

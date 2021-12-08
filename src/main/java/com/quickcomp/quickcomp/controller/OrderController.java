@@ -1,6 +1,7 @@
 package com.quickcomp.quickcomp.controller;
 
 import com.quickcomp.quickcomp.dto.OrderDTO;
+import com.quickcomp.quickcomp.dto.OrderForPersistDTO;
 import com.quickcomp.quickcomp.model.entity.Order;
 import com.quickcomp.quickcomp.service.interfaces.OrderService;
 import com.quickcomp.quickcomp.service.interfaces.UserService;
@@ -44,23 +45,23 @@ public class OrderController {
     }
 
     @PostMapping("/post")
-    public ResponseEntity<Order> saveOrder(@RequestBody Order order){
+    public ResponseEntity<Order> saveOrder(@RequestBody OrderForPersistDTO order){
         HttpHeaders headers = new HttpHeaders();
 
         if (order == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        orderService.save(order);
-        return new ResponseEntity<>(order, headers, HttpStatus.CREATED);
+        Order temp = orderService.save(order);
+        return new ResponseEntity<>(temp, headers, HttpStatus.CREATED);
     }
     @PutMapping("/update/{id}")
-    public ResponseEntity<Order> updateOrder(@PathVariable Long id, @RequestBody Order order){
+    public ResponseEntity<Order> updateOrder(@PathVariable Long id, @RequestBody OrderForPersistDTO order){
         HttpHeaders headers = new HttpHeaders();
         if ((order) == null || (id == null)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        orderService.save(order);
-        return new ResponseEntity<>(order, headers, HttpStatus.CREATED);
+        Order temp = orderService.save(order);
+        return new ResponseEntity<>(temp, headers, HttpStatus.CREATED);
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Order> deleteOrder(@PathVariable Long id){

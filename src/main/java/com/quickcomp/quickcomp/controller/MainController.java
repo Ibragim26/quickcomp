@@ -49,6 +49,7 @@ public class MainController {
 
     @PostMapping("/registration")
     public String createUser(@ModelAttribute("user") User user) {
+
         userService.createUser(user);
         return "redirect:/login";
     }

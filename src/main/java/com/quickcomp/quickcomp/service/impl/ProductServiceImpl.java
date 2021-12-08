@@ -1,6 +1,8 @@
 package com.quickcomp.quickcomp.service.impl;
 
 import com.quickcomp.quickcomp.dto.ProductCategoryDTO;
+import com.quickcomp.quickcomp.dto.ProductForPersistDTO;
+import com.quickcomp.quickcomp.model.entity.Category;
 import com.quickcomp.quickcomp.model.entity.Product;
 import com.quickcomp.quickcomp.model.repository.CategoryRepository;
 import com.quickcomp.quickcomp.model.repository.ProductRepository;
@@ -15,11 +17,12 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
 
     private ProductRepository productRepository;
-
+    private CategoryRepository categoryRepository;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -29,8 +32,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void save(Product product) {
-        productRepository.save(product);
+    public Product save(ProductForPersistDTO product) {
+        Category category = categoryRepository.findById(product.getCategory()).orElse(null);
+        Product temp = new Product(product.getName(), product.getDescription(), product.getPrice(), category);
+        productRepository.save(temp);
+        return temp;
     }
 
     @Override
