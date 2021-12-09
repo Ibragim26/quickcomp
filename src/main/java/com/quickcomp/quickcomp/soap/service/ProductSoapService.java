@@ -18,11 +18,7 @@ public class ProductSoapService {
 
     public ProductSoap getProduct(long id) {
         ProductCategoryDTO product = service.getById(id);
-        ProductSoap soap = new ProductSoap();
-        soap.setId(product.getId());
-        soap.setDescription(product.getDescription());
-        soap.setName(product.getName());
-        soap.setPrice(product.getPrice());
+        ProductSoap soap = new ProductSoap(product.getId(), product.getName(), product.getDescription(), product.getPrice());
         return soap;
     }
     

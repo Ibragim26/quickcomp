@@ -22,23 +22,19 @@ public class OrderSoapService {
     }
 
     public OrderSoap getOrder(long id) {
-
         OrderDTO order = service.getById(id);
-        OrderSoap soap = new OrderSoap();
 
         GregorianCalendar c = new GregorianCalendar();
-
         c.setTime(order.getDate());
         XMLGregorianCalendar date = null;
         try {
-            date = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
+          date = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
         } catch (DatatypeConfigurationException e) {
-            e.printStackTrace();
+         e.printStackTrace();
         }
 
-        soap.setAddress(order.getAddress());
-        soap.setDate(date);
-        soap.setId(order.getId());
+        OrderSoap soap = new OrderSoap(order.getId(), order.getAddress(), date);
+
         return soap;
     }
 }
