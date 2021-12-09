@@ -36,6 +36,7 @@ public class WebConfig {
         definition.setPortTypeName("SoapServicePort");
         definition.setTargetNamespace("http://quickcomp.com/quickcomp/soap/entities/");
         return definition;
+
     }
 
 }
