@@ -1,6 +1,6 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:tns="http://quickcomp.com/quickcomp/soap/product/"
-           targetNamespace="http://quickcomp.com/quickcomp/soap/product/"
+           xmlns:tns="http://quickcomp.com/quickcomp/soap/entities/"
+           targetNamespace="http://quickcomp.com/quickcomp/soap/entities/"
            elementFormDefault="qualified">
 
 
@@ -28,6 +28,32 @@
             <xs:element name="name" type="xs:string"/>
             <xs:element name="description" type="xs:string"/>
             <xs:element name="price" type="xs:double"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="getOrderRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+
+    <xs:element name="getOrderResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="booking" type="tns:OrderSoap"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+
+    <xs:complexType name="OrderSoap">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element name="address" type="xs:string"/>
+            <xs:element name="date" type="xs:date"/>
         </xs:sequence>
     </xs:complexType>
 

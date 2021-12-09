@@ -32,7 +32,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDTO getById(Long id) {
-        OrderDTO order = new OrderDTO(orderRepository.getOne(id));
+        OrderDTO order = new OrderDTO(orderRepository.findById(id).orElse(null));
         return order;
     }
     @Override
