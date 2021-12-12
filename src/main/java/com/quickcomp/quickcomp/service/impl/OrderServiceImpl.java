@@ -1,9 +1,7 @@
 package com.quickcomp.quickcomp.service.impl;
 
 import com.quickcomp.quickcomp.dto.OrderDTO;
-import com.quickcomp.quickcomp.dto.OrderForPersistDTO;
 import com.quickcomp.quickcomp.model.entity.Order;
-import com.quickcomp.quickcomp.model.entity.OrderStatus;
 import com.quickcomp.quickcomp.model.entity.Product;
 import com.quickcomp.quickcomp.model.repository.OrderRepository;
 import com.quickcomp.quickcomp.model.repository.OrderStatusRepository;
@@ -12,7 +10,6 @@ import com.quickcomp.quickcomp.service.interfaces.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,10 +30,12 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDTO getById(Long id) {
         OrderDTO order = new OrderDTO(orderRepository.findById(id).orElse(null));
+
+
         return order;
     }
     @Override
-    public Order save(OrderForPersistDTO order) {
+    public Order save(OrderDTO order) {
         Product product = productRepository.findById(order.getProduct()).orElse(null);
         com.quickcomp.quickcomp.model.entity.OrderStatus status = orderStatusRepository.findById(order.getOrderStatus()).orElse(null);
 

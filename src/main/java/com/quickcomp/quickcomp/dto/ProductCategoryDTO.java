@@ -9,14 +9,18 @@ public class ProductCategoryDTO {
     private String name;
     private String description;
     private double price;
-    private String category;
+
+    private Long category;
+
+
+    private String categoryName;
 
     public ProductCategoryDTO(Product product) {
         this.id = product.getId();
         this.name = product.getName();
         this.description = product.getDescription();
         this.price = product.getPrice();
-        this.category = product.getCategory().getCategory();
+        this.categoryName = product.getCategory().getCategory();
     }
 
     public ProductCategoryDTO() {

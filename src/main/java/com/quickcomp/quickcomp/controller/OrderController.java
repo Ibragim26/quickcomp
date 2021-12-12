@@ -1,7 +1,6 @@
 package com.quickcomp.quickcomp.controller;
 
 import com.quickcomp.quickcomp.dto.OrderDTO;
-import com.quickcomp.quickcomp.dto.OrderForPersistDTO;
 import com.quickcomp.quickcomp.model.entity.Order;
 import com.quickcomp.quickcomp.service.interfaces.OrderService;
 import com.quickcomp.quickcomp.service.interfaces.UserService;
@@ -45,7 +44,7 @@ public class OrderController {
     }
 
     @PostMapping("/post")
-    public ResponseEntity<Order> saveOrder(@RequestBody OrderForPersistDTO order){
+    public ResponseEntity<Order> saveOrder(@RequestBody OrderDTO order){
         HttpHeaders headers = new HttpHeaders();
 
         if (order == null) {
@@ -55,7 +54,7 @@ public class OrderController {
         return new ResponseEntity<>(temp, headers, HttpStatus.CREATED);
     }
     @PutMapping("/update/{id}")
-    public ResponseEntity<Order> updateOrder(@PathVariable Long id, @RequestBody OrderForPersistDTO order){
+    public ResponseEntity<Order> updateOrder(@PathVariable Long id, @RequestBody OrderDTO order){
         HttpHeaders headers = new HttpHeaders();
         if ((order) == null || (id == null)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

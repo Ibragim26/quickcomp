@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Панель администратора</title>
+</head>
+<body>
+<table border="1">
+    <tr>
+        <th>Email</th>
+        <th>Имя пользователя</th>
+        <th>Роли</th>
+        <th>Назначить администратором</th>
+    </tr>
+    <tr th:each="user: ${users}">
+        <td th:text="${user.email}" />
+        <td th:text="${user.username}" />
+        <td th:text="${user.roles}" />
+        <td>
+            <form th:action="@{/change/{id} (id=${user.id})}" method="post">
+            <input type="submit" value="сделать админом">
+        </form>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

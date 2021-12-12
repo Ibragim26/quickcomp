@@ -9,17 +9,19 @@ import java.util.Date;
 public class OrderDTO {
 
     private long id;
-    private String product;
+    private String productName;
     private Date date;
     private String address;
-    private String orderStatus;
+    private String orderStatusName;
+    private Long product;
+    private Long orderStatus;
 
     public OrderDTO(Order order) {
         this.id = order.getId();
-        this.product = order.getProduct().getName();
+        this.productName = order.getProduct().getName();
         this.date = order.getDate();
         this.address = order.getAddress();
-        this.orderStatus = order.getOrderStatus().getStatus();
+        this.orderStatusName = order.getOrderStatus().getStatus();
     }
 
     public OrderDTO() {

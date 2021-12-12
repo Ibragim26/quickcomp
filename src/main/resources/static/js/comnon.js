@@ -79,7 +79,6 @@ $(function () {
         createForm();
         $('.tab').click(()=>{tableFunction(event)});
     }
-
     $('#edit').hide();
 
     function createTable() {
@@ -101,32 +100,26 @@ $(function () {
         });
     }
     function createForm() {
-        if ($('fieldset input').length)
-            Array.from($('fieldset input')).forEach(e => e.remove())
-        if ($('fieldset label').length)
-            Array.from($('fieldset label')).forEach(e => e.remove())
-        if ($('fieldset textarea').length)
-            Array.from($('fieldset textarea')).forEach(e => e.remove())
-        if ($('fieldset select').length)
-            Array.from($('fieldset select')).forEach(e => e.remove())
+        if ($('.prod_in').length)
+            Array.from($('.prod_in')).forEach(e => e.remove())
 
         if (state == 'category'){
-            $('<label for="field_1">Категория</label>').appendTo('fieldset');
+            $('<label for="field_1" class="prod_in">Категория</label>').appendTo('fieldset');
             $('<input type="text" id="field_1" class="prod_in" name="category">').appendTo('fieldset');
 
-            $('<label for="field_2">Рейтнг</label>').appendTo('fieldset');
+            $('<label for="field_2" class="prod_in">Рейтнг</label>').appendTo('fieldset');
             $('<input type="text" id="field_1" class="prod_in" name="rating">').appendTo('fieldset');
         }
         else if (state == 'product'){
             $.get('api/category/get', (data) => {
                 categoryForProduct = data;
-                $('<label for="field_1">Имя продукта</label>').appendTo('fieldset');
+                $('<label for="field_1" class="prod_in">Имя продукта</label>').appendTo('fieldset');
                 $('<input type="text" id="field_1" name="name" class="prod_in">').appendTo('fieldset');
 
-                $('<label for="field_2">Описание продукта</label>').appendTo('fieldset');
+                $('<label for="field_2" class="prod_in">Описание продукта</label>').appendTo('fieldset');
                 $('<textarea id="field_2" name="description" cols="30" rows="10" class="prod_in"></textarea>').appendTo('fieldset');
 
-                $('<label for="field_3">Цена продукта</label>').appendTo('fieldset');
+                $('<label for="field_3" class="prod_in">Цена продукта</label>').appendTo('fieldset');
                 $('<input type="number" id="field_3" name="price" class="prod_in">').appendTo('fieldset');
 
                 $('<select id="field_4" name="category" class="prod_in"></select>').appendTo('fieldset');
@@ -141,9 +134,9 @@ $(function () {
                 $.get('api/status/get', (data) =>{
                     statsForOrder = data;
 
-                    $('<label for="field_1">Адрес</label>').appendTo('fieldset');
+                    $('<label for="field_1" class="prod_in">Адрес</label>').appendTo('fieldset');
                     $('<input type="text" id="field_1" name="address" class="prod_in">').appendTo('fieldset');
-                    $('<label for="field_2">Дата доставки</label>').appendTo('fieldset');
+                    $('<label for="field_2" class="prod_in">Дата доставки</label>').appendTo('fieldset');
                     $('<input type="date" id="field_2" name="date" class="prod_in">').appendTo('fieldset');
 
                     $('<select id="field_3" name="product" class="prod_in"></select>').appendTo('fieldset');
@@ -159,10 +152,9 @@ $(function () {
                     })
                 })
             })
-
-
         }
     }
+
     function fillTable() {
         $.get(`api/${state}/get`, (data) => {
             content = data;
@@ -173,13 +165,22 @@ $(function () {
                     let td = $('<td></td>').appendTo(tr);
                     td.attr('name', `${head.field}`);
                     td.text(elem[head.field]);
+                    if(state == 'product' && head.field == 'category'){
+                        td.text(elem.categoryName);
+                    } else if (state == 'order'){
+                        if (head.field == 'product') {
+                            td.text(elem.productName);
+                        }
+                        else if (head.field == 'orderStatus') {
+                            td.text(elem.orderStatusName);
+                        }
+                    }
                 })
             })
         })
     }
 
     $('#send').click(()=>{
-
         let temp = {};
         let formFields = $('.prod_in');
         Array.from(formFields).forEach(ins =>{
@@ -192,35 +193,6 @@ $(function () {
             if (elem.id > maxId)
                 maxId = elem.id;
         })
-        // if (state == 'product') {
-        //     categoryForProduct.forEach(e => {
-        //         if (e.id == temp.category) {
-        //             temp.category = e;
-        //         }
-        //     })
-        // }
-        // if (state == 'order') {
-        //     statsForOrder.forEach(e => {
-        //         if (e.id == temp.orderStatus){
-        //             temp.orderStatus = e;
-        //         }
-        //     })
-        //     let x;
-        //     productsForOrder.forEach(e => {
-        //         if (e.id == temp.product){
-        //             temp.product = e;
-        //             $.get('api/category/get', (data) => {
-        //                 categoryForProduct = data;
-        //                 categoryForProduct.forEach(e => {
-        //                     if (e.category == temp.product.category) {
-        //                         x = e;
-        //                     }
-        //                 })
-        //             })
-        //         }
-        //     })
-        //     temp.product.category = x;
-        // }
         let token = $("meta[name='_csrf']").attr("content");
         $.ajax({
             url: `api/${state}/post`,
@@ -259,8 +231,8 @@ $(function () {
                 $('#edit').hide();
                 $('#send').show();
                 init();
-                }
-            })
+            }
+        })
     });
 
     $('#edit').click(() => {
@@ -270,37 +242,6 @@ $(function () {
             temp[e.name] = e.value;
             e.value = '';
         })
-        temp.id = id;
-        // if (state == 'product') {
-        //     categoryForProduct.forEach(e => {
-        //         if (e.id == temp.category) {
-        //             temp.category = e;
-        //         }
-        //     })
-        // }
-        //
-        // if (state == 'order') {
-        //     statsForOrder.forEach(e => {
-        //         if (e.id == temp.orderStatus){
-        //             temp.orderStatus = e;
-        //         }
-        //     })
-        //     let x;
-        //     productsForOrder.forEach(e => {
-        //         if (e.id == temp.product){
-        //             temp.product = e;
-        //             $.get('api/category/get', (data) => {
-        //                 categoryForProduct = data;
-        //                 categoryForProduct.forEach(e => {
-        //                     if (e.category == temp.product.category) {
-        //                         x = e;
-        //                     }
-        //                 })
-        //             })
-        //         }
-        //     })
-        //     temp.product.category = x;
-        // }
         let token = $("meta[name='_csrf']").attr("content");
         $.ajax({
             url: `api/${state}/update/${idForChanges}`,
@@ -356,14 +297,13 @@ $(function () {
         }else if (state == 'order'){
             filteredField = 'address';
         }
-        console.log(filteredField)
         content.sort((a, b)=> {
             console.log(a[`${filteredField}`])
             if (a[filteredField].charAt(0) == b[filteredField].charAt(0)) return 0
             else if (a[filteredField].charAt(0) > b[filteredField].charAt(0)) return 1
             else return -1
         })
-       init();
+        init();
     })
 
     $('#desc').click(()=>{

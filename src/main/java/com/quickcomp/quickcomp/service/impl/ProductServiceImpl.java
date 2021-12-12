@@ -1,7 +1,6 @@
 package com.quickcomp.quickcomp.service.impl;
 
 import com.quickcomp.quickcomp.dto.ProductCategoryDTO;
-import com.quickcomp.quickcomp.dto.ProductForPersistDTO;
 import com.quickcomp.quickcomp.model.entity.Category;
 import com.quickcomp.quickcomp.model.entity.Product;
 import com.quickcomp.quickcomp.model.repository.CategoryRepository;
@@ -28,11 +27,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductCategoryDTO getById(Long id) {
         ProductCategoryDTO productCategoryDTO = new ProductCategoryDTO(productRepository.getById(id));
+        productCategoryDTO.setCategoryName(categoryRepository.getById(productCategoryDTO.getCategory()).getCategory());
+        productCategoryDTO.toString();
         return productCategoryDTO;
     }
 
     @Override
-    public Product save(ProductForPersistDTO product) {
+    public Product save(ProductCategoryDTO product) {
         Category category = categoryRepository.findById(product.getCategory()).orElse(null);
         Product temp = new Product(product.getName(), product.getDescription(), product.getPrice(), category);
         productRepository.save(temp);

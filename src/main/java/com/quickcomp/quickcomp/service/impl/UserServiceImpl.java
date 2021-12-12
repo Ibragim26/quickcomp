@@ -10,6 +10,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.quickcomp.quickcomp.config.SecurityConfig;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -33,11 +40,33 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username);
     }
 
+
+    @Transactional
     @Override
     public boolean createUser(User user) {
+        if (userRepository.findAll().size() == 0){
+            user.getRoles().add(Role.ROLE_ADMIN);
+            user.getRoles().add(Role.ROLE_SUPER_ADMIN);
+        }
         user.getRoles().add(Role.ROLE_USER);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return true;
+    }
+
+
+    @Override
+    public void changeUserRole(Long id) {
+
+        User temp = userRepository.getById(id);
+        userRepository.deleteById(id);
+        temp.getRoles().add(Role.ROLE_ADMIN);
+        userRepository.save(temp);
+    }
+
+
+    @Override
+    public List<User> getUsers() {
+        return userRepository.findAll();
     }
 }

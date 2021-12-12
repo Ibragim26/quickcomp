@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,6 +42,7 @@ public class CategoryController {
     }
 
     @PostMapping("/post")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_SUPER_ADMIN')")
     public ResponseEntity<Category> saveCategory(@RequestBody Category category){
         HttpHeaders headers = new HttpHeaders();
         if (category == null) {
@@ -50,6 +52,7 @@ public class CategoryController {
         return new ResponseEntity<>(category, headers, HttpStatus.CREATED);
     }
     @PutMapping("/update/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_SUPER_ADMIN')")
     public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category category){
         HttpHeaders headers = new HttpHeaders();
         if ((category) == null || (id == null)) {
@@ -59,6 +62,7 @@ public class CategoryController {
         return new ResponseEntity<>(category, headers, HttpStatus.CREATED);
     }
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_SUPER_ADMIN')")
     public ResponseEntity<Category> deleteCategory(@PathVariable Long id){
         Category category = categoryService.getById(id);
         if (category == null) {
