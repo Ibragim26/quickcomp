@@ -29,6 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/order").hasAnyRole("ADMIN", "USER", "SUPER_ADMIN")
                 .antMatchers("/product").hasAnyRole("ADMIN", "SUPER_ADMIN")
+                .antMatchers("/users").hasRole("SUPER_ADMIN")
                 .and()
                 .formLogin()
                 .loginPage("/login")
@@ -38,6 +39,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutSuccessUrl("/")
                 .permitAll()
+                .and()
+                .exceptionHandling()
+                .accessDeniedPage("/error")
+
 //                .and().csrf().disable()
         ;
     }

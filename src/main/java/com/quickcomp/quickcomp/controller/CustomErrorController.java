@@ -10,16 +10,21 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class CustomErrorController  implements ErrorController {
-
-
     @GetMapping("/error")
+
+    public String forbiddenException(){
+        return "error/error403";
+    }
     public String handleError(HttpServletRequest request) {
 
-        String errorPage = "error400";
+
+        String errorPage = "error/error";
 
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
         if (status != null) {
             int statusCode = Integer.valueOf(status.toString());
+
+//            errorPage = errorPage + statusCode;
 
             if (statusCode == HttpStatus.NOT_FOUND.value()) {
                 errorPage = "error/error404";
@@ -39,10 +44,4 @@ public class CustomErrorController  implements ErrorController {
         }
         return errorPage;
     }
-
-
-//    @Override
-//    public String getErrorPath() {
-//        return "/error";
-//    }
 }
