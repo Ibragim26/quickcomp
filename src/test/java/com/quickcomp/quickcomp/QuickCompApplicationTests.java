@@ -1,5 +1,8 @@
 package com.quickcomp.quickcomp;
 
+import com.quickcomp.quickcomp.dto.ProductCategoryDTO;
+import com.quickcomp.quickcomp.model.entity.Category;
+import com.quickcomp.quickcomp.model.entity.Product;
 import com.quickcomp.quickcomp.model.entity.User;
 import com.quickcomp.quickcomp.model.entity.enums.Role;
 import com.quickcomp.quickcomp.model.repository.CategoryRepository;
@@ -17,6 +20,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 
 @SpringBootTest
 class QuickCompApplicationTests {
@@ -25,6 +29,8 @@ class QuickCompApplicationTests {
     private CategoryRepository categoryRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private ProductService productService;
     @Autowired
     private OrderService orderService;
 
@@ -83,4 +89,42 @@ class QuickCompApplicationTests {
         assertThat(orderService.getAll().size() == 0);
     }
 
+    @Test
+    void testSavingCategory(){
+        Category category = new Category();
+        category.setCategory("Ноутбуки");
+        category.setRating("4.6");
+        categoryRepository.save(category);
+        long x = categoryRepository.findAll().size()-1;
+        assertThat(categoryRepository.findById(x)).isPresent();
+    }
+    @Test
+    void testDeletingCategory(){
+        long x = categoryRepository.findAll().size();
+        categoryRepository.deleteById(x);
+        assertThat((categoryRepository.findAll().size() + 1) == x);
+    }
+    @Test
+    void testSavingProduct(){
+        ProductCategoryDTO product = new ProductCategoryDTO();
+        product.setCategory(1L);
+        product.setName("Note");
+        product.setDescription("descr");
+        product.setPrice(12000D);
+        assertThat(productService.save(product)).isNotNull();
+    }
+    @Test
+    void testDeletingProduct(){
+        long x = productService.getAll().size();
+        productService.getById(x);
+        assertThat((productService.getAll().size() + 1) == x);
+    }
+    @Test
+    void testSavingUser(){
+        User user = new User();
+        user.setPassword("123");
+        user.setEmail("2aa@aa");
+        user.setUsername("user2");
+        assertThat(userService.createUser(user));
+    }
 }

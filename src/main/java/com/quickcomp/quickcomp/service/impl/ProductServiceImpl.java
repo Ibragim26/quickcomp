@@ -8,6 +8,7 @@ import com.quickcomp.quickcomp.model.repository.ProductRepository;
 import com.quickcomp.quickcomp.service.interfaces.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,11 +25,13 @@ public class ProductServiceImpl implements ProductService {
         this.categoryRepository = categoryRepository;
     }
 
+    @Transactional
     @Override
     public ProductCategoryDTO getById(Long id) {
-        ProductCategoryDTO productCategoryDTO = new ProductCategoryDTO(productRepository.getById(id));
-        productCategoryDTO.setCategoryName(categoryRepository.getById(productCategoryDTO.getCategory()).getCategory());
-        productCategoryDTO.toString();
+        Product temp = productRepository.getById(id);
+        ProductCategoryDTO productCategoryDTO = new ProductCategoryDTO(temp);
+        productCategoryDTO.setId(temp.getId());
+        productCategoryDTO.setCategoryName(temp.getCategory().getCategory());
         return productCategoryDTO;
     }
 
@@ -47,7 +50,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductCategoryDTO> getAll() {
-
         List<Product> products = productRepository.findAll();
         List<ProductCategoryDTO> list = products
                 .stream().map(product -> {
