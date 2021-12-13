@@ -36,6 +36,13 @@ public class MainController {
         return "order";
     }
 
+    @GetMapping("/product")
+    public String product(Model model, Principal principal){
+        if (principal != null)
+            model.addAttribute("authorized", userService.findByUsername(principal.getName()));
+        return "product";
+    }
+
     @GetMapping("/registration")
     public String registration(){
 
